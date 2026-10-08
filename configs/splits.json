@@ -1,0 +1,5 @@
+{
+  "_note": "Member 1 fills this on day 1 from `make list-games` / arc.get_environments(). Never tune on held_out. Disclose every game used in the report.",
+  "dev": [],
+  "held_out": []
+}

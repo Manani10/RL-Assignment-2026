@@ -1,0 +1,8 @@
+{
+  "agent": "random",
+  "games": ["REPLACE_WITH_DEV_GAME_IDS"],
+  "seeds": [0, 1, 2],
+  "total_budget": 5000,
+  "adapter": {"frame_stack": 1, "click_cell": 8, "action_budget": 2000, "on_game_over": "reset"},
+  "tag": "random_baseline_v1"
+}

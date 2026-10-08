@@ -1,0 +1,33 @@
+# secrets — NEVER commit (assignment: remove API keys and credentials)
+.env
+.kaggle/
+*access_token*
+kaggle.json
+
+# python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+.pytest_cache/
+
+# big / generated
+results/*
+!results/.gitkeep
+environment_files/
+recordings/
+checkpoints/
+*.pt
+*.ckpt
+wandb/
+
+# latex build
+report/*.aux
+report/*.log
+report/*.out
+report/*.bbl
+report/*.blg
+report/*.synctex.gz
+
+.DS_Store
+.ipynb_checkpoints/

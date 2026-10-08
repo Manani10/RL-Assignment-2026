@@ -1,0 +1,8 @@
+# Python 3.12 (the arc-agi package requires it)
+arc-agi            # official ARC-AGI-3 toolkit (local game engine) — record exact version in results/*/meta.json
+numpy>=1.26
+gymnasium>=0.29    # optional; only for the Gym adapter semantics
+torch>=2.2         # DQN / PPO (Kaggle images already ship torch)
+matplotlib>=3.8    # plots for the report
+pandas>=2.1        # results analysis
+pytest>=8
