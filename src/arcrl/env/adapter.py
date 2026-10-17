@@ -4,11 +4,12 @@ The official toolkit (`pip install arc-agi`, Python 3.12) is NOT a Gymnasium env
 so the assignment asks us to write and document an adapter. Semantics:
 
 Observation : (16*k, 64, 64) float32 one-hot of the last k grids (see encoding.py)
-Action      : Discrete(N). Index -> (GameAction, data):
+Action      : Discrete(70) by default (see actions.py). Index -> (GameAction, data):
                 0..5  -> ACTION1, ACTION2, ACTION3, ACTION4, ACTION5, ACTION7
-                6..   -> ACTION6 click at the centre of a coarse cell
-                         (64/click_cell)^2 targets, default 8x8 cells -> 64 targets
-              `info["action_mask"]` marks which indices the game currently allows.
+                6..69 -> ACTION6 clicks: grid-cell centres (baseline) or detected
+                         objects (click_mode="objects", shared improvement)
+              `info["action_mask"]` marks which indices are allowed now
+              (optionally with known no-op actions removed: prune_noops=True).
 Reward      : +1 each time `levels_completed` increases (environment-derived).
               Optional shaping terms are added by WRAPPERS, never here, and are
               logged separately — shaped return is NOT the ARC score.
@@ -26,6 +27,7 @@ from typing import Any
 
 import numpy as np
 
+from .actions import SIMPLE_ACTIONS, ActionConfig, ActionSpace  # noqa: F401
 from .encoding import FrameStack, last_grid
 
 try:  # Gymnasium is optional so the code also runs on bare Kaggle images
@@ -38,15 +40,15 @@ except ImportError:  # pragma: no cover
     spaces = None
     _Base = object
 
-SIMPLE_ACTIONS = ["ACTION1", "ACTION2", "ACTION3", "ACTION4", "ACTION5", "ACTION7"]
-
-
 @dataclass
 class AdapterConfig:
     frame_stack: int = 1
-    click_cell: int = 8          # 8 -> 8x8 px cells -> 64 click targets
+    click_cell: int = 8          # 8 -> 8x8 px cells -> 64 click slots
     action_budget: int = 2000    # actions per episode (game attempt)
     on_game_over: str = "reset"  # "reset" | "terminate"
+    # --- shared improvement (Member 1); defaults = baseline behaviour ---
+    click_mode: str = "grid"     # "grid" | "objects"  (see actions.py)
+    prune_noops: bool = False    # mask actions known not to change the frame
 
 
 def _name(x: Any) -> str:
@@ -64,13 +66,9 @@ class ArcGymEnv(_Base):
         self.raw = raw_env
         self.A = action_enum
         self.cfg = cfg or AdapterConfig()
-        n_cells = 64 // self.cfg.click_cell
-        self.click_targets = [
-            (y * self.cfg.click_cell + self.cfg.click_cell // 2,
-             x * self.cfg.click_cell + self.cfg.click_cell // 2)
-            for y in range(n_cells) for x in range(n_cells)
-        ]
-        self.n_actions = len(SIMPLE_ACTIONS) + len(self.click_targets)
+        self.actions = ActionSpace(ActionConfig(click_cell=self.cfg.click_cell, click_mode=self.cfg.click_mode,
+                                                prune_noops=self.cfg.prune_noops))
+        self.n_actions = self.actions.n
         self.stack = FrameStack(self.cfg.frame_stack)
         if spaces is not None:
             self.observation_space = spaces.Box(0.0, 1.0, (16 * self.cfg.frame_stack, 64, 64), np.float32)
@@ -78,34 +76,27 @@ class ArcGymEnv(_Base):
         self._levels = 0
         self.actions_used = 0
         self.last_obs = None
+        self._grid = None
 
     # ---------------------------------------------------------------- helpers
     def decode(self, idx: int):
         """Discrete index -> (GameAction, data dict)."""
-        if idx < len(SIMPLE_ACTIONS):
-            return getattr(self.A, SIMPLE_ACTIONS[idx]), {}
-        y, x = self.click_targets[idx - len(SIMPLE_ACTIONS)]
-        return getattr(self.A, "ACTION6"), {"x": int(x), "y": int(y)}
+        name, data = self.actions.decode(int(idx))
+        return getattr(self.A, name), data
 
     def action_mask(self) -> np.ndarray:
-        allowed = {_name(a) for a in self.raw.action_space}
-        mask = np.zeros(self.n_actions, dtype=bool)
-        for i, n in enumerate(SIMPLE_ACTIONS):
-            mask[i] = n in allowed
-        if "ACTION6" in allowed:
-            mask[len(SIMPLE_ACTIONS):] = True
-        if not mask.any():  # never hand the agent an empty mask
-            mask[:] = True
-        return mask
+        return self.actions.mask({_name(a) for a in self.raw.action_space})
 
-    def _info(self, obs) -> dict:
+    def _observe(self, obs) -> dict:
+        self._grid = last_grid(obs.frame)
+        self.actions.update(self._grid)
         return {
             "action_mask": self.action_mask(),
             "levels_completed": int(obs.levels_completed),
             "win_levels": int(getattr(obs, "win_levels", 0) or 0),
             "state": _name(obs.state),
             "actions_used": self.actions_used,
-            "grid": last_grid(obs.frame),
+            "grid": self._grid,
         }
 
     # -------------------------------------------------------------- gym API
@@ -118,12 +109,15 @@ class ArcGymEnv(_Base):
         self.last_obs = obs
         self._levels = int(obs.levels_completed)
         self.actions_used = 0
-        return self.stack.reset(last_grid(obs.frame)), self._info(obs)
+        info = self._observe(obs)
+        return self.stack.reset(self._grid), info
 
     def step(self, idx: int):
+        prev_grid = self._grid
         action, data = self.decode(int(idx))
         obs = self.raw.step(action, data=data)
         self.actions_used += 1
+        self.actions.record(int(idx), changed=not np.array_equal(last_grid(obs.frame), prev_grid))
         reward, terminated, truncated = 0.0, False, False
 
         lv = int(obs.levels_completed)
@@ -145,11 +139,16 @@ class ArcGymEnv(_Base):
             truncated = True
 
         self.last_obs = obs
-        return self.stack.push(last_grid(obs.frame)), reward, terminated, truncated, self._info(obs)
+        info = self._observe(obs)
+        return self.stack.push(self._grid), reward, terminated, truncated, info
 
 
-def make_env(game_id: str, cfg: AdapterConfig | None = None, seed: int = 0):
-    """Build an adapter around a real game. Requires `pip install arc-agi`."""
+def make_env(game_id: str, cfg: AdapterConfig | None = None, seed: int = 0, save_recording: bool = False):
+    """Build an adapter around a real game. Requires `pip install arc-agi`.
+
+    save_recording=True writes a JSONL replay to ./recordings/ — use it for the
+    success/failure case figures the report needs.
+    """
     if game_id.startswith("mock"):
         from .mock import MockAction, MockGame
         return ArcGymEnv(MockGame(seed), MockAction, cfg)
@@ -157,7 +156,27 @@ def make_env(game_id: str, cfg: AdapterConfig | None = None, seed: int = 0):
     from arcengine import GameAction
 
     arc = arc_agi.Arcade()
-    raw = arc.make(game_id, seed=seed)
+    raw = arc.make(game_id, seed=seed, save_recording=save_recording)
     if raw is None:
         raise RuntimeError(f"Could not create environment {game_id!r}")
-    return ArcGymEnv(raw, GameAction, cfg)
+    env = ArcGymEnv(raw, GameAction, cfg)
+    env.arcade = arc  # keep the client so the protocol can read the OFFICIAL scorecard
+    return env
+
+
+def official_score(env) -> dict | None:
+    """Read the official scorecard for this env's Arcade client (None for mock games)."""
+    arc = getattr(env, "arcade", None)
+    if arc is None:
+        return None
+    sc = arc.get_scorecard()
+    if sc is None:
+        return None
+    if hasattr(sc, "model_dump"):
+        d = sc.model_dump()
+    elif hasattr(sc, "__dict__"):
+        d = dict(vars(sc))
+    else:
+        d = {"raw": str(sc)}
+    d.setdefault("score", getattr(sc, "score", None))
+    return d

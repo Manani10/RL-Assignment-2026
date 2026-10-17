@@ -20,7 +20,7 @@ from pathlib import Path
 import numpy as np
 
 from arcrl.agents import build_agent
-from arcrl.env.adapter import AdapterConfig, make_env
+from arcrl.env.adapter import AdapterConfig, make_env, official_score
 
 
 @dataclass
@@ -32,10 +32,11 @@ class EvalConfig:
     adapter: AdapterConfig = field(default_factory=AdapterConfig)
     tag: str = "dev"
     out_dir: str = "results"
+    record: bool = False                 # save official replays (for failure-case figures)
 
 
 def run_one(cfg: EvalConfig, game: str, seed: int, ep_log, verbose=False) -> dict:
-    env = make_env(game, cfg.adapter, seed=seed)
+    env = make_env(game, cfg.adapter, seed=seed, save_recording=cfg.record)
     agent = build_agent(cfg.agent, env.n_actions, 16 * cfg.adapter.frame_stack, seed)
     agent.begin_game(game)
 
@@ -44,33 +45,42 @@ def run_one(cfg: EvalConfig, game: str, seed: int, ep_log, verbose=False) -> dic
     t0 = time.time()
     while used < cfg.total_budget:
         obs, info = env.reset(seed=seed)
-        level_actions, last_mark, done = [], 0, False
+        base = used  # budget counts env actions INCLUDING auto-resets after GAME_OVER
+        level_actions, last_mark, done, ep_max = [], 0, False, info["levels_completed"]
         while not done and used < cfg.total_budget:
             a = agent.act(obs, info)
             nxt, r, term, trunc, info = env.step(a)
-            used += 1
+            used = base + env.actions_used
             done = term or trunc
             agent.observe(obs, a, r, nxt, term, info)
             if r > 0:  # level(s) completed
                 level_actions.append(env.actions_used - last_mark)
                 last_mark = env.actions_used
                 curve.append((used, info["levels_completed"]))
+            # a GAME_OVER auto-reset drops levels_completed back down, so track the max
+            ep_max = max(ep_max, info["levels_completed"])
             obs = nxt
-        best_levels = max(best_levels, info["levels_completed"])
+        best_levels = max(best_levels, ep_max)
         wins += int(info["state"] == "WIN")
         ep_log.write(json.dumps({
             "agent": cfg.agent, "game": game, "seed": seed, "episode": episode,
-            "levels_completed": info["levels_completed"], "win_levels": info["win_levels"],
+            "levels_completed": ep_max, "win_levels": info["win_levels"],
             "actions": env.actions_used, "actions_per_level": level_actions,
             "state": info["state"], "budget_used": used,
         }) + "\n")
         episode += 1
         if verbose:
-            print(f"[{cfg.agent}] {game} seed={seed} ep={episode} levels={info['levels_completed']} used={used}")
+            print(f"[{cfg.agent}] {game} seed={seed} ep={episode} levels={ep_max} used={used}")
+    try:
+        sc = official_score(env)
+    except Exception as e:  # never lose a run because the scorecard call failed
+        sc = {"error": repr(e)}
     return {
         "agent": cfg.agent, "game": game, "seed": seed, "episodes": episode,
         "best_levels": best_levels, "wins": wins, "actions": used,
         "wall_s": round(time.time() - t0, 2), "curve": curve,
+        "official_score": None if sc is None else sc.get("score"),
+        "scorecard": sc,
     }
 
 
@@ -98,6 +108,6 @@ def evaluate(cfg: EvalConfig, verbose=False) -> list[dict]:
         for game in cfg.games:
             for seed in cfg.seeds:
                 res = run_one(cfg, game, seed, ep_log, verbose)
-                run_log.write(json.dumps(res) + "\n")
+                run_log.write(json.dumps(res, default=str) + "\n")
                 runs.append(res)
     return runs

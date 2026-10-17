@@ -11,8 +11,9 @@ When            : every `rollout_len` env steps -> `epochs` passes of minibatch 
 Effect          : actions are sampled from the masked policy.
 
 Improvement slots:
-    IMP1  e.g. RND intrinsic reward (exploration under sparse level rewards)
-    IMP2  e.g. recurrent (LSTM/GRU) policy for memory, or curriculum over games
+    IMP1  (Member 3) RND intrinsic reward (exploration under sparse level rewards)
+    IMP2  (shared, built by Member 1) structured action space: object click
+          targets + no-op pruning, switched on via AdapterConfig flags
 """
 from __future__ import annotations
 

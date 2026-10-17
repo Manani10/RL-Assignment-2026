@@ -21,53 +21,66 @@ ARC-AGI-3 is a set of small video-game-like puzzles. Each game is a **64×64 gri
 
 ## 2. Who does what
 
-| | **Member 1 — Lead / Infrastructure & Evaluation** | **Member 2 — DQN track** | **Member 3 — PPO track** |
+| | **Member 1 — Lead: environment, shared action space, evaluation, comparison** | **Member 2 — DQN** | **Member 3 — PPO** |
 |---|---|---|---|
-| Owns code | `src/arcrl/env/`, `src/arcrl/eval/`, `scripts/`, `kaggle/`, random agent, plotting | `src/arcrl/agents/dqn.py` + DQN improvements | `src/arcrl/agents/ppo.py` + PPO improvements |
-| Rubric focus | Problem formulation (10), rigour/fair comparison (25), reproducibility (10), leaderboard (10) | Baseline (20) + improvements (25) for DQN | Baseline (20) + improvements (25) for PPO |
+| Owns code | `src/arcrl/env/` (incl. the **shared action-space improvement**), `src/arcrl/eval/`, `scripts/`, `kaggle/` | `agents/dqn.py` + DQN exploration improvement | `agents/ppo.py` + PPO exploration improvement |
+| Runs | Random sanity check, **all ablations, all held-out evaluations**, Kaggle submissions | DQN baseline, imp1, imp2 on dev games (3 seeds) | PPO baseline, imp1, imp2 on dev games (3 seeds) |
+| Writes | Intro, problem formulation, setup, shared-improvement method, **DQN vs PPO comparison + ablations + generalisation**, abstract/conclusion, Paper Track, integration | DQN background + DQN iterative results | PPO background (full PPO explanation) + PPO iterative results |
 
-### Member 1 — Lead, environment, evaluation, Kaggle, report integration
-1. **Admin (day 1):** create the Kaggle team, join **both** tracks (ARC-AGI-3 + Paper Track) with the same members and team name; set up this repo and invite members; Overleaf with the **RLC 2026 template, cover page disabled**.
-2. **Environment:** install `arc-agi` (Python 3.12), list public games, verify adapter semantics on real games (observation, action mask, reset cost, level progression). Record package versions.
-3. **Dev / held-out split:** pick the development games and a disjoint held-out set; write it into `configs/splits.json` and *never* tune on held-out games. Disclose every game used.
-4. **Evaluation protocol:** freeze budgets, seeds (≥3), stopping rules, checkpoint policy; run the **random sanity check**; build the plotting script (learning curve vs. interaction budget, per-game table, seed spread).
-5. **Kaggle pipeline:** get `kaggle/my_agent.py` working inside the official starter; first (random) submission by **Mon 12 Oct**; later submit the best agent, choose the **nominated** leaderboard entry, save submission ID/score/timestamp evidence.
-6. **Final comparison & ablations section** (DQN vs PPO: score, completion, actions, compute, held-out generalisation), plus the report's intro, MDP formulation, environment/adapter and evaluation sections. Integrate everyone's sections, enforce 8-page limit, write the Paper Track condensed version (<1500 words), build the ZIP.
+Each algorithm still goes baseline → improvement 1 → improvement 2:
+- **Improvement 1 (own):** exploration, built by the algorithm owner (DQN: count-based novelty bonus; PPO: RND).
+- **Improvement 2 (shared):** the structured action space built by Member 1. Each algorithm owner integrates it, runs it, and analyses its effect on *their* algorithm (the brief allows a shared idea if its effect is evaluated separately for each algorithm).
+
+### Member 1 — Lead: environment, shared action space, evaluation, comparison
+Detailed, dated checklist: **[MEMBER1_CHECKLIST.md](MEMBER1_CHECKLIST.md)**.
+1. **Admin:** Kaggle team on **both** tracks (same members, same team name); GitHub (collaborators, protect `main`); Overleaf with the RLC 2026 template, cover page disabled.
+2. **Environment:** verify the adapter on real games with `scripts/inspect_games.py`; record package versions.
+3. **Dev / held-out split** with `scripts/make_split.py`; freeze it; never tune on held-out games.
+4. **Evaluation protocol:** freeze budgets and seeds, run the random sanity check, keep `scripts/analyze.py` as the single source of tables and figures.
+5. **Shared improvement — structured action space** (in `src/arcrl/env/`, behind flags, ready by **Mon 19 Oct**):
+   - *Object click targets:* replace the fixed 8×8 click grid with clicks on detected objects (connected regions of one colour, background excluded), keeping the action dimension fixed so networks don't change.
+   - *No-op pruning:* remember which actions did not change the frame in a given state and mask them out (always leave at least one action).
+   - Tests on the mock game; a short method write-up for the report.
+6. **Ablations and held-out:** run every ablation (full agent / minus imp1 / minus imp2, for both algorithms) and the one-time held-out evaluation, on the same games, budgets and seeds.
+7. **DQN vs PPO comparison:** final table, learning curves, interaction efficiency, compute, held-out generalisation, ablation attribution, failure-case replays.
+8. **Kaggle:** first (random) submission by Mon 12 Oct; submit the best agent; nominate the leaderboard entry and save evidence; Paper Track write-up (< 1500 words).
+9. **Report:** write own sections, integrate all sections, enforce the 8-page limit, build the Moodle ZIP.
 
 ### Member 2 — DQN (algorithm covered in the course)
-1. Get the DQN baseline training on the mock game, then on real dev games via `scripts/evaluate.py` (3 seeds, Member 1's budgets).
-2. Identify the main limitation from the baseline results (likely: never sees a reward → nothing to learn from; huge click action space).
-3. **Improvement 1 (suggested):** exploration — count-based novelty bonus on frame hashes (`grid_hash`) or "action-effect" pruning (mask actions that never change the frame). Hypothesis → implement behind a flag → evaluate.
-4. **Improvement 2 (suggested), motivated by Imp-1 results:** object-centric click targets (click connected-component centroids instead of an 8×8 grid), prioritised replay, or an episodic state-graph memory.
-5. Ablations: each improvement on/off. Write the DQN background, method and iterative-results sections (limitation → hypothesis → change → result for each step).
+1. Get the DQN baseline running on the mock game, then on real dev games via `scripts/evaluate.py` (3 seeds, shared budgets).
+2. From baseline results, identify the main limitation (likely: almost never sees a reward).
+3. **Improvement 1 — exploration:** count-based novelty bonus on frame hashes (`grid_hash`). Limitation → hypothesis → implement behind a flag → evaluate.
+4. **Improvement 2 — shared action space:** turn on Member 1's object clicks / no-op pruning for DQN, evaluate, and explain what it changes for a value-based agent.
+5. Write the DQN background, method and iterative-results sections (limitation → hypothesis → change → result for each step), including failure cases.
 
 ### Member 3 — PPO (algorithm not covered in the course)
-1. Get PPO baseline running with identical encoder, action space and budgets.
-2. **Explain PPO properly in the report** (required): clipped surrogate objective, GAE, value/entropy terms, when updates happen, what is learned.
-3. **Improvement 1 (suggested):** intrinsic motivation — Random Network Distillation (RND) bonus for sparse level rewards.
-4. **Improvement 2 (suggested):** memory — recurrent (GRU) policy, or a curriculum over games/levels; motivate it from Imp-1 failure cases.
-5. Ablations, PPO background/method/results sections. If you reuse an idea Member 2 also uses, evaluate it separately for PPO.
+1. Get the PPO baseline running with the identical encoder, action space and budgets.
+2. **Explain PPO properly in the report** (required): clipped surrogate objective, GAE, value and entropy terms, when updates happen, what is learned.
+3. **Improvement 1 — exploration:** Random Network Distillation (RND) intrinsic reward.
+4. **Improvement 2 — shared action space:** turn on Member 1's object clicks / no-op pruning for PPO, evaluate, and explain what it changes for a policy-gradient agent.
+5. Write the PPO background, method and iterative-results sections, including failure cases.
 
 ### Everyone
 - Log every experiment in `docs/EXPERIMENT_LOG.md` (including failures — they earn marks).
 - Use the shared encoder, adapter and evaluation protocol unchanged so comparisons are fair. Disclose any unequal budgets.
-- Each member writes their **contribution statement** (one paragraph) for the submission.
-- Cite every paper, repo and pretrained model used; declare any generative-AI use per Wits policy.
+- Hand Member 1 your final result tags and configs by **Thu 22 Oct** for the comparison.
+- Each member writes a one-paragraph **contribution statement**, including any generative-AI use (Wits policy).
+- Cite every paper, repo and pretrained model used.
 
 ---
 
 ## 3. Timeline (≈19 days)
 
-| Dates | Milestone | Owner |
-|---|---|---|
-| **Thu 8 – Sun 11 Oct** | Kaggle team on both tracks; repo + Overleaf; adapter verified on real games; DQN & PPO run end-to-end on mock + 1 real game | M1 / M2 / M3 |
-| **Mon 12 Oct** | Evaluation protocol + dev/held-out split **frozen**; random baseline results; first Kaggle (random) submission | M1 |
-| **Tue 13 – Thu 15 Oct** | DQN & PPO baselines evaluated (3 seeds, dev games). Team meeting: agree on limitations | M2, M3 |
-| **Fri 16 – Mon 19 Oct** | Improvement 1 for each algorithm, evaluated | M2, M3 |
-| **Tue 20 – Thu 22 Oct** | Improvement 2 + ablations; held-out evaluation; best agent submitted to Kaggle | all |
-| **Fri 23 – Sun 25 Oct** | Report draft complete; figures final; nominate leaderboard entry | all, M1 integrates |
-| **Mon 26 Oct** | Proofread, page limit, Paper Track write-up, code cleanup (no API keys) | all |
-| **Tue 27 Oct (before 23:59)** | Submit `Kaggle-team-name.zip` on Moodle | M1 |
+| Dates | Member 1 | Member 2 (DQN) | Member 3 (PPO) |
+|---|---|---|---|
+| **Thu 8 – Sun 11 Oct** | Kaggle team, GitHub, Overleaf; inspect games; verify adapter | DQN runs on mock + 1 real game | PPO runs on mock + 1 real game |
+| **Mon 12 Oct** | Freeze split + protocol; random baseline; first Kaggle submission | — | — |
+| **Tue 13 – Thu 15 Oct** | Test shared action space on real games (code is in `env/actions.py`); write intro, problem, setup | DQN baseline evaluated (3 seeds) | PPO baseline evaluated (3 seeds) |
+| **Fri 16 – Mon 19 Oct** | Shared action space ready for M2/M3 (**Mon 19**); Overleaf report skeleton | Imp1: novelty bonus | Imp1: RND |
+| **Tue 20 – Thu 22 Oct** | Ablation runs; held-out evaluation; best agent to Kaggle | Imp2: shared action space for DQN; hand over results | Imp2: shared action space for PPO; hand over results |
+| **Fri 23 – Sun 25 Oct** | Comparison section; integrate report; nominate leaderboard entry | DQN sections | PPO sections |
+| **Mon 26 Oct** | Proofread, page limit, Paper Track, code cleanup | Review | Review |
+| **Tue 27 Oct, before 23:59** | Submit `Kaggle-team-name.zip` on Moodle | — | — |
 
 ---
 

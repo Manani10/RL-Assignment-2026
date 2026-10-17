@@ -1,0 +1,36 @@
+% OWNER: Member 1. DRAFT — replace every \todo{} before submission.
+\section{Introduction}
+
+Reinforcement learning agents are usually trained and tested on environments
+whose reward function is known in advance. ARC-AGI-3~\citep{arcagi3} removes
+that assumption: each game is a small grid world whose controls, rules and goal
+are not stated, so an agent must explore, infer what counts as progress and
+exploit it within a limited number of actions. Performance is measured by
+Relative Human Action Efficiency (RHAE), which rewards completing levels with
+as few actions as a first-time human player.
+
+We study how far two standard deep RL algorithms can go in this setting when
+they learn \emph{online}, from scratch, inside each game: Deep Q-Networks
+(DQN; \citealp{mnih2015dqn}), covered in the course, and Proximal Policy
+Optimisation (PPO; \citealp{schulman2017ppo}), which is not. Both share one
+observation encoder, action space and evaluation protocol, so differences are
+attributable to the learning algorithm and to the improvements we add.
+
+\paragraph{Research question.} \todo{One sentence, e.g.: Which mechanisms
+--- exploration bonuses, memory, or structured action spaces --- most improve
+the sample efficiency of value-based and policy-gradient agents on unseen
+ARC-AGI-3 games?}
+
+\paragraph{Contributions.}
+\begin{itemize}
+  \item A documented Gymnasium-style adapter for the official ARC-AGI-3
+        toolkit, with action masking and explicit reset and budget semantics
+        (Section~\ref{sec:problem}).
+  \item A reproducible evaluation protocol with matched interaction budgets,
+        three seeds, and a frozen development / held-out game split
+        (Section~\ref{sec:setup}).
+  \item Two evidence-driven improvement steps for each algorithm, with
+        ablations (Sections~\ref{sec:dqn}--\ref{sec:ppo}).
+  \item \todo{Headline result in one line, with official score and Kaggle
+        submission ID.}
+\end{itemize}

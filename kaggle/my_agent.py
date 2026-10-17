@@ -1,10 +1,12 @@
 """Bridge: plug our agents into the official Kaggle starter — OWNER: Member 1.
 
-Usage
-    1. git clone https://github.com/arcprize/ARC-AGI-3-Kaggle-Starter (outside this repo)
-    2. Copy this file over  ARC-AGI-3-Kaggle-Starter/agent/my_agent.py
-       and copy our  src/arcrl  package next to it (or pip install -e this repo).
-    3. make play-local  ->  make submit  ->  "Submit to Competition" on kaggle.com
+Do NOT copy this file directly: the starter only packages agent/my_agent.py,
+so `arcrl` would be missing on Kaggle. Build a single self-contained file:
+
+    python scripts/bundle_agent.py --agent dqn --out build/my_agent.py
+    cp build/my_agent.py ../ARC-AGI-3-Kaggle-Starter/agent/my_agent.py
+    cd ../ARC-AGI-3-Kaggle-Starter && make play-local && make submit
+    then "Submit to Competition" on kaggle.com
 
 The starter calls `choose_action(frames, latest_frame)` once per step and
 `is_done(...)` to stop. We translate that into our Agent.act/observe API so the
@@ -24,13 +26,19 @@ from arcengine import FrameData, GameAction, GameState  # noqa: F401
 from agents.agent import Agent  # framework base class (from the starter's vendor/)
 
 from arcrl.agents import build_agent
-from arcrl.env.adapter import SIMPLE_ACTIONS
+from arcrl.env.actions import ActionConfig, ActionSpace
 from arcrl.env.encoding import FrameStack, last_grid
 
-AGENT_NAME = os.environ.get("ARCRL_AGENT", "random")   # e.g. dqn, ppo, dqn_imp2
+AGENT_NAME = os.environ.get("ARCRL_AGENT", "random")   # e.g. dqn, ppo, dqn_imp1
+CLICK_MODE = os.environ.get("ARCRL_CLICK_MODE", "grid")            # "grid" | "objects"
+PRUNE_NOOPS = os.environ.get("ARCRL_PRUNE_NOOPS", "0") == "1"
 CLICK_CELL = 8
 FRAME_STACK = 1
 MAX_ACTIONS = int(os.environ.get("ARCRL_MAX_ACTIONS", "5000"))
+
+
+def _state(frame) -> str:
+    return getattr(frame.state, "name", str(frame.state))
 
 
 def _names(actions) -> set[str]:
@@ -46,37 +54,31 @@ def _names(actions) -> set[str]:
 class MyAgent(Agent):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        n_cells = 64 // CLICK_CELL
-        self.clicks = [(y * CLICK_CELL + CLICK_CELL // 2, x * CLICK_CELL + CLICK_CELL // 2)
-                       for y in range(n_cells) for x in range(n_cells)]
-        self.n_actions = len(SIMPLE_ACTIONS) + len(self.clicks)
-        self.inner = build_agent(AGENT_NAME, self.n_actions, 16 * FRAME_STACK, seed=0)
+        # same action space as local experiments (env/actions.py)
+        self.actions = ActionSpace(ActionConfig(click_cell=CLICK_CELL, click_mode=CLICK_MODE,
+                                                prune_noops=PRUNE_NOOPS))
+        self.inner = build_agent(AGENT_NAME, self.actions.n, 16 * FRAME_STACK, seed=0)
         self.inner.begin_game(getattr(self, "game_id", "kaggle"))
         self.stack = FrameStack(FRAME_STACK)
-        self.prev = None          # (obs, action_idx)
+        self.prev = None          # (obs, action_idx, grid)
         self.prev_levels = 0
         self.n = 0
 
-    def _mask(self, latest) -> np.ndarray:
-        allowed = _names(getattr(latest, "available_actions", None))
-        m = np.zeros(self.n_actions, bool)
-        for i, n in enumerate(SIMPLE_ACTIONS):
-            m[i] = n in allowed
-        m[len(SIMPLE_ACTIONS):] = "ACTION6" in allowed
-        return m if m.any() else np.ones_like(m)
-
     def is_done(self, frames, latest_frame) -> bool:
-        return latest_frame.state is GameState.WIN or self.n >= MAX_ACTIONS
+        return _state(latest_frame) == "WIN" or self.n >= MAX_ACTIONS
 
     def choose_action(self, frames, latest_frame):
-        if latest_frame.state in (GameState.NOT_PLAYED, GameState.GAME_OVER):
+        if _state(latest_frame) in ("NOT_PLAYED", "GAME_OVER"):
             self.prev = None
             self.n += 1
             return GameAction.RESET
 
         grid = last_grid(latest_frame.frame)
+        if self.prev is not None:  # must run BEFORE update(): uses the previous frame's hash
+            self.actions.record(self.prev[1], changed=not np.array_equal(grid, self.prev[2]))
+        self.actions.update(grid)
         obs = self.stack.push(grid) if self.prev else self.stack.reset(grid)
-        info = {"action_mask": self._mask(latest_frame)}
+        info = {"action_mask": self.actions.mask(_names(getattr(latest_frame, "available_actions", None)))}
         lv = int(latest_frame.levels_completed)
         if self.prev is not None:
             r = float(max(0, lv - self.prev_levels))
@@ -84,11 +86,10 @@ class MyAgent(Agent):
         self.prev_levels = lv
 
         idx = self.inner.act(obs, info)
-        self.prev = (obs, idx)
+        self.prev = (obs, idx, grid)
         self.n += 1
-        if idx < len(SIMPLE_ACTIONS):
-            return getattr(GameAction, SIMPLE_ACTIONS[idx])
-        y, x = self.clicks[idx - len(SIMPLE_ACTIONS)]
-        action = GameAction.ACTION6
-        action.set_data({"x": int(x), "y": int(y)})
+        name, data = self.actions.decode(idx)
+        action = getattr(GameAction, name)
+        if data:
+            action.set_data(data)
         return action

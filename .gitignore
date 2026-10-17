@@ -31,3 +31,4 @@ report/*.synctex.gz
 
 .DS_Store
 .ipynb_checkpoints/
+build/

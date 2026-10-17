@@ -11,10 +11,12 @@ Suggested structure and owners:
 | Abstract, Introduction, research question | M1 | 0.75 |
 | Problem formulation (MDP: state/history, actions, reward, termination), adapter | M1 | 1 |
 | Background: DQN / PPO (+ related ARC-AGI-3 work) | M2 / M3 | 1 |
-| Experimental setup (games, split, budgets, seeds, hardware) | M1 | 0.75 |
+| Experimental setup (games, split, budgets, seeds, hardware) + shared action-space method | M1 | 1 |
 | DQN: baseline → imp1 → imp2 | M2 | 1.5 |
 | PPO: baseline → imp1 → imp2 | M3 | 1.5 |
-| Final comparison, ablations, held-out, failure cases | M1 (+all) | 1 |
+| DQN vs PPO comparison, ablations, held-out, failure cases | M1 | 1 |
 | Limitations & conclusion | all | 0.5 |
 
 Quality reference given in the brief: *Less is More: Recursive Reasoning with Tiny Networks*.
+
+Drafts already written: `sections/01_introduction.tex`, `02_problem.tex`, `04_setup.tex`, `07_comparison.tex` (Member 1), `references.bib`. Define `\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}` in the preamble.

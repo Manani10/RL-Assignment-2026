@@ -1,0 +1,37 @@
+% OWNER: Member 1 (with input from Members 2 and 3). SKELETON — fill after final runs.
+\section{Final comparison and ablations}\label{sec:comparison}
+
+\begin{table}[h]
+\centering\small
+\caption{Final agents on development and held-out games (mean $\pm$ s.d., 3 seeds,
+\todo{5000}-action budget). Official RHAE from the toolkit scorecard; Kaggle score
+is the public leaderboard on hidden games.}\label{tab:final}
+\begin{tabular}{lccccc}
+\toprule
+Agent & RHAE (dev) & RHAE (held-out) & Levels (held-out) & Actions to 1st level & Wall-clock \\
+\midrule
+Random            & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} \\
+DQN baseline      & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} \\
+DQN + imp1 + imp2 & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} \\
+PPO baseline      & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} \\
+PPO + imp1 + imp2 & \todo{} & \todo{} & \todo{} & \todo{} & \todo{} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Ablations.} \todo{For each algorithm: full agent, minus imp1, minus
+imp2. Which component accounts for the gain? Same games, budget and seeds.}
+
+\paragraph{Interaction efficiency and compute.} \todo{Learning curves
+(Figure~\ref{fig:curves}); DQN vs PPO actions to first level; GPU memory and
+time per run.}
+
+\paragraph{Generalisation.} \todo{Dev vs held-out gap. Be explicit: the design
+was tuned on dev games only.}
+
+\paragraph{Failure cases.} \todo{Two replays: one success, one characteristic
+failure (e.g. agent stuck clicking empty cells, or looping between two
+frames). Saved with \texttt{record: true}.}
+
+\paragraph{Limitations.} \todo{Coarse click grid; three seeds; small number of
+games; per-game online learning cannot reuse knowledge across games.}

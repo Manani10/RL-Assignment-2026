@@ -1,0 +1,55 @@
+% OWNER: Member 1. DRAFT — fill numbers from configs/ and results/*/meta.json.
+\section{Experimental setup}\label{sec:setup}
+
+\paragraph{Games and split.} From the \todo{N} public games we fixed, with a
+seeded shuffle (\texttt{scripts/make\_split.py}, seed 2026), a development set
+of \todo{n\_dev} games used for all design decisions and a disjoint held-out
+set of \todo{n\_held} games evaluated only for the final agents. All games used
+are listed in Appendix~\ref{app:games}. Kaggle evaluation uses hidden games and
+is reported separately.
+
+\paragraph{Protocol.} One run is an (agent, game, seed) triple. The agent plays
+the game for a fixed budget of \todo{5000} environment actions, including
+resets, learning online throughout. We use seeds $\{0,1,2\}$ for every agent
+version and report mean $\pm$ standard deviation across seeds, with individual
+seeds shown in the learning curves. Every episode is logged, including
+unsuccessful ones. We report (i) the official RHAE score from the toolkit's
+scorecard, (ii) the best number of levels completed, (iii) actions to complete
+the first level, and (iv) wall-clock time. Learning curves plot the best
+levels completed against interaction budget. No checkpoint selection is done:
+the score is that of the online learner over the whole budget.
+
+\paragraph{Sanity check.} A uniform-random policy over allowed actions
+(same adapter, same budget, same seeds) is the reference.
+
+\paragraph{Compute.} \todo{Local hardware (CPU/GPU, RAM) for development runs;
+Kaggle: \texttt{T4}$\times$2 / RTX 6000, internet disabled.} Training and
+evaluation coincide in the online setting; we report wall-clock per run and
+total GPU-hours separately for any offline pretraining.
+
+\paragraph{Hyperparameters.} Table~\ref{tab:hparams}. Both algorithms use the
+same CNN encoder (three stride-2 $3\times3$ convolutions, 32/64/64 channels,
+256-unit linear layer) and the same input and action space.
+
+\begin{table}[h]
+\centering\small
+\caption{Baseline hyperparameters. \todo{update if changed.}}\label{tab:hparams}
+\begin{tabular}{lll}
+\toprule
+ & DQN (Double DQN) & PPO \\
+\midrule
+Learning rate & $2.5\times10^{-4}$ & $2.5\times10^{-4}$ \\
+Discount $\gamma$ & 0.99 & 0.99 \\
+Batch / minibatch & 32 & 64 \\
+Replay / rollout & 50k buffer, start 500 & 256 steps, 4 epochs \\
+Target update / clip & 1000 steps & $\epsilon=0.2$ \\
+Exploration & $\epsilon$: 1.0$\to$0.05 over 20k & entropy coef 0.01 \\
+Other & Huber loss, grad-clip 10 & GAE $\lambda=0.95$, $c_v=0.5$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Kaggle submission.} The submitted agent is built from the same code
+by \texttt{scripts/bundle\_agent.py}, which packages our library into the
+single file the competition notebook accepts and records the git commit.
+Nominated submission: \todo{ID, public score, timestamp}.

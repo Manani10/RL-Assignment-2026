@@ -8,8 +8,9 @@ When            : every `train_every` env steps once the buffer has `learn_start
 Effect          : act = argmax_a Q(s, a) over allowed a (with prob 1-eps).
 
 Improvement slots (fill in, one file/flag per improvement so ablations are easy):
-    IMP1  e.g. count-based novelty bonus on grid hashes (exploration)
-    IMP2  e.g. object-centric click targets / prioritised replay / episodic memory
+    IMP1  (Member 2) count-based novelty bonus on grid hashes (exploration)
+    IMP2  (shared, built by Member 1) structured action space: object click
+          targets + no-op pruning, switched on via AdapterConfig flags
 """
 from __future__ import annotations
 

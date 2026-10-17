@@ -77,3 +77,37 @@ def test_protocol_random_agent(tmp_path):
     assert len(runs) == 2 and all(r["actions"] == 600 for r in runs)
     lines = (tmp_path / "t" / "episodes.jsonl").read_text().splitlines()
     assert len(lines) >= 2 and "levels_completed" in json.loads(lines[0])
+
+
+def test_levels_survive_game_over_reset(tmp_path):
+    """Regression: a GAME_OVER auto-reset must not erase levels completed earlier."""
+    import arcrl.eval.protocol as proto
+    from arcrl.agents.base import Agent
+
+    class AlwaysRight(Agent):
+        def act(self, obs, info):
+            return 3
+
+    orig = proto.build_agent
+    proto.build_agent = lambda *a, **k: AlwaysRight()
+    try:
+        # level 1 after 8 moves, GAME_OVER at 300 -> reset to level 0, budget ends at 305
+        cfg = EvalConfig(agent="right", games=["mock"], seeds=[0], total_budget=305,
+                         tag="go", out_dir=str(tmp_path))
+        run = evaluate(cfg)[0]
+    finally:
+        proto.build_agent = orig
+    assert run["best_levels"] == 1
+    assert run["actions"] == 305
+    assert run["curve"][0] == [8, 1] or run["curve"][0] == (8, 1)
+
+
+def test_analyze_tables(tmp_path):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+    import analyze
+    runs = {"random_x": [{"game": "g", "seed": s, "best_levels": s % 2, "official_score": 0.0, "wins": 0,
+                          "curve": [[100, 1]] if s % 2 else [], "actions": 500, "wall_s": 1.0}
+                         for s in range(3)]}
+    rows, overall = analyze.tables(runs)
+    assert rows[0]["solved_seeds"] == 1 and rows[0]["actions_to_first_level"] == "100"
+    assert overall[0]["mean_official_score"].startswith("0")

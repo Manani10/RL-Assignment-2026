@@ -1,0 +1,56 @@
+% OWNER: Member 1. DRAFT — check every claim against scripts/inspect_games.py output.
+\section{Problem formulation}\label{sec:problem}
+
+\paragraph{Environment.} Each ARC-AGI-3 game consists of a sequence of
+levels. After every action the toolkit returns one or more $64\times64$ frames
+with integer colours in $\{0,\dots,15\}$, the game state
+(\textsc{not\_finished}, \textsc{win} or \textsc{game\_over}), the number of
+levels completed, and the set of actions currently available. There is no
+reward signal and no description of the goal. We used toolkit version
+\todo{arc-agi x.y.z} (Python 3.12). \todo{Summarise inspection: number of
+public games, levels per game, which actions are offered, how often actions
+change the frame --- Table~\ref{tab:games} in supplementary material.}
+
+\paragraph{Formulation as a POMDP.} The game's internal state is hidden, so
+we model each game as a partially observable MDP. We define:
+\begin{itemize}
+  \item \textbf{Observation} $o_t \in \{0,1\}^{16\times64\times64}$: one-hot
+        encoding of the \emph{last} frame returned by a step (intermediate
+        animation frames are discarded). The agent input is a stack of the last
+        $k$ observations, $s_t = (o_{t-k+1},\dots,o_t)$; baselines use $k=1$.
+        This treats the screen as approximately Markov; games with hidden
+        counters or delayed effects violate this, which motivates the memory
+        improvements.
+  \item \textbf{Actions} $\mathcal{A} = \{\textsc{a1},\dots,\textsc{a5},
+        \textsc{a7}\} \cup \mathcal{C}$, where $\mathcal{C}$ is a click
+        (\textsc{a6}) at the centre of each cell of an $8\times8$ grid of
+        $8\times8$-pixel cells, giving $|\mathcal{A}|=70$. A binary mask
+        $m_t$ removes actions the game does not currently allow; both
+        algorithms only select masked-in actions. The coarse click grid is an
+        action abstraction: it can miss targets smaller than a cell.
+  \item \textbf{Reward} $r_t = \ell_{t+1} - \ell_t$, the increase in levels
+        completed. This is derived from public feedback only. Any shaping or
+        intrinsic terms are added by separate wrappers and are never reported
+        as the ARC-AGI-3 score.
+  \item \textbf{Termination} An episode terminates on \textsc{win}. On
+        \textsc{game\_over} the adapter issues \textsc{reset}, which we count as
+        an action, and the episode continues. Episodes are truncated after
+        \todo{2000} actions.
+\end{itemize}
+We use $\gamma=0.99$. Because RHAE squares the human-to-agent action ratio,
+the true objective prefers short solutions more strongly than the discounted
+return does; we therefore report both levels completed and the official score.
+
+\paragraph{What persists.} Agents are re-initialised at the start of every
+game and learn online during the interaction budget; no parameters or memories
+transfer between games or evaluation runs unless stated
+(\texttt{persist\_across\_games}). Within a game, network weights, replay
+buffer and any novelty statistics persist across levels and resets. This
+mirrors the Kaggle setting, where evaluation games are unseen and internet
+access is disabled.
+
+\paragraph{Prior work.} \todo{3--5 sentences: ARC-AGI-1/2 (static), the
+ARC-AGI-3 preview and milestone winners (LLM/code-writing agents, state-graph
+exploration), and RL with sparse rewards: count-based exploration
+\citep{bellemare2016count}, RND \citep{burda2019rnd}, recurrent policies.
+Position our work: learning agents without pretrained LLMs.}
