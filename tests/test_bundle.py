@@ -63,9 +63,8 @@ def _play_bundle(tmp_path, extra):
     GameAction = _install_stubs()
     # make sure the bundle does NOT rely on src/ being importable
     saved_path = list(sys.path)
-    sys.path[:] = [p for p in sys.path if not p.rstrip("/").endswith("src")]
-    for m in [m for m in sys.modules if m == "arcrl" or m.startswith("arcrl.")]:
-        del sys.modules[m]
+    sys.path[:] = [p for p in sys.path if not p.rstrip("/\\").endswith("src")]
+    saved_arcrl = {m: sys.modules.pop(m) for m in list(sys.modules) if m == "arcrl" or m.startswith("arcrl.")}
     try:
         spec = importlib.util.spec_from_file_location("bundled_my_agent", out)
         mod = importlib.util.module_from_spec(spec)
@@ -97,3 +96,7 @@ def _play_bundle(tmp_path, extra):
         for m in ("arcengine", "agents", "agents.agent"):
             sys.modules.pop(m, None)
         sys.meta_path[:] = [f for f in sys.meta_path if type(f).__name__ != "_ArcrlFinder"]
+        # drop the bundled copies and put the real src/ modules back for later tests
+        for m in [m for m in sys.modules if m == "arcrl" or m.startswith("arcrl.")]:
+            del sys.modules[m]
+        sys.modules.update(saved_arcrl)
