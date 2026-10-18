@@ -6,12 +6,11 @@ Group project for **Reinforcement Learning (COMS4061A/COMS7071A), Wits 2026**, a
 > Plan, work split and timeline: **[docs/PLAN.md](docs/PLAN.md)**  ·  How the code fits together: [docs/CODE_GUIDE.md](docs/CODE_GUIDE.md)  ·  Experiment log: [docs/EXPERIMENT_LOG.md](docs/EXPERIMENT_LOG.md)  ·  Team workflow: [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Team
-| Role | Name | Student no. | Owns |
+| Role | Name | Student no. | 
 |---|---|---|---|
-| Member 1 (lead) | | | env adapter, evaluation, Kaggle, report integration |
-| Member 2 | | | DQN + improvements |
-| Member 3 | | | PPO + improvements |
-
+| Member 1 (lead) | | 
+| Member 2 | |
+| Member 3 | | 
 Kaggle team name: `TODO`
 
 ## Layout
