@@ -8,7 +8,7 @@ Group project for **Reinforcement Learning (COMS4061A/COMS7071A), Wits 2026**, a
 ## Team
 | Role | Name | Student no. | 
 |---|---|---|---|
-| Member 1 (lead) | | 
+| Member 1 |1607717 | Sinethemba Nani|
 | Member 2 | |
 | Member 3 | | 
 Kaggle team name: `TODO`
