@@ -5,15 +5,14 @@ Group project for **Reinforcement Learning (COMS4061A/COMS7071A), Wits 2026**, a
 
 > Plan, work split and timeline: **[docs/PLAN.md](docs/PLAN.md)**  ·  How the code fits together: [docs/CODE_GUIDE.md](docs/CODE_GUIDE.md)  ·  Experiment log: [docs/EXPERIMENT_LOG.md](docs/EXPERIMENT_LOG.md)  ·  Team workflow: [CONTRIBUTING.md](CONTRIBUTING.md)
 
-## Team
-| Role | Name | Student no. |
+Team
+Role	Name	Student no.
+Member 1	Sinethemba Nani	1607717
+Member 2	Cassia Rene Rieckhoff	1396207
+Member 3	Margaret Keitshokile Molefe	456052
 
-|---|---|---|---|
-| Member 1 |1607717 | Sinethemba Nani|
-| Member 2 |1396207 | Cassia Rene Rieckhoff
-| Member 3 |456052 | Margaret Keitshokile Molefe
-
-Kaggle team name: `just2gurls`
+Kaggle team name: just3gurls (ARC Prize 2026 – ARC-AGI-3 and ARC Prize 2026 – Paper Track)
+Moodle submission file: just3gurls.zip
 
 ## Layout
 ```
