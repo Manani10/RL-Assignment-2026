@@ -6,12 +6,14 @@ Group project for **Reinforcement Learning (COMS4061A/COMS7071A), Wits 2026**, a
 > Plan, work split and timeline: **[docs/PLAN.md](docs/PLAN.md)**  ·  How the code fits together: [docs/CODE_GUIDE.md](docs/CODE_GUIDE.md)  ·  Experiment log: [docs/EXPERIMENT_LOG.md](docs/EXPERIMENT_LOG.md)  ·  Team workflow: [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Team
-| Role | Name | Student no. | 
+| Role | Name | Student no. |
+
 |---|---|---|---|
 | Member 1 |1607717 | Sinethemba Nani|
-| Member 2 | |
-| Member 3 | | 
-Kaggle team name: `TODO`
+| Member 2 |1396207 | Cassia Rene Rieckhoff
+| Member 3 |456052 | Margaret Keitshokile Molefe
+
+Kaggle team name: `just2gurls`
 
 ## Layout
 ```
