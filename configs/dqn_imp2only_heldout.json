@@ -1,0 +1,30 @@
+{
+  "agent": "dqn",
+  "games": [
+    "ar25-0c556536",
+    "bp35-0a0ad940",
+    "cd82-fb555c5d",
+    "dc22-fdcac232",
+    "ft09-0d8bbf25",
+    "g50t-5849a774",
+    "lf52-271a04aa",
+    "m0r0-492f87ba",
+    "tr87-cd924810",
+    "vc33-5430563c"
+  ],
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "total_budget": 5000,
+  "adapter": {
+    "frame_stack": 1,
+    "click_cell": 8,
+    "action_budget": 2000,
+    "on_game_over": "reset",
+    "click_mode": "objects",
+    "prune_noops": false
+  },
+  "tag": "dqn_imp2only_heldout_v1"
+}
