@@ -10,9 +10,13 @@ def build_agent(name: str, n_actions: int, in_ch: int, seed: int):
     if name == "dqn":
         from .dqn import DQNAgent
         return DQNAgent(n_actions, in_ch, seed)
-   
+    if name == "dqn_imp1":
+        from .dqn import DQNAgent, DQNConfig
+        return DQNAgent(n_actions, in_ch, seed, cfg=DQNConfig(novelty=True, novelty_beta=0.01))
+    if name == "ppo":
+        from .ppo import PPOAgent
+        return PPOAgent(n_actions, in_ch, seed)
     if name.startswith("hdqn"):   # hierarchical DQN family (see agents/hdqn.py VARIANTS)
         from .hdqn import HDQNAgent, hdqn_config
         return HDQNAgent(n_actions, in_ch, seed, cfg=hdqn_config(name))
-    # Register improved variants here, e.g. "dqn_imp1": DQNAgent(..., cfg=DQNConfig(novelty=True))
     raise KeyError(f"Unknown agent {name!r}")

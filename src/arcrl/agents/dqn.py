@@ -15,12 +15,14 @@ Improvement slots (fill in, one file/flag per improvement so ablations are easy)
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import sqrt
 
 import numpy as np
 import torch
 import torch.nn.functional as F
 from torch import nn
 
+from ..env.encoding import grid_hash
 from .base import Agent, masked_choice
 from .nets import GridEncoder
 
@@ -38,6 +40,8 @@ class DQNConfig:
     eps_end: float = 0.05
     eps_decay_steps: int = 20_000
     persist_across_games: bool = False   # False = re-initialise per game (pure online)
+    novelty: bool = False               # IMP1: add count-based intrinsic reward during training
+    novelty_beta: float = 0.01          # IMP1: scale of the intrinsic reward
     device: str = "cuda" if torch.cuda.is_available() else "cpu"
 
 
@@ -98,6 +102,9 @@ class DQNAgent(Agent):
         self.n_actions, self.in_ch = n_actions, in_ch
         self.rng = np.random.default_rng(seed)
         torch.manual_seed(seed)
+        # Counts are maintained for one (game, seed) evaluation run.
+        # The evaluator calls begin_game once per run, not once per episode.
+        self._novelty_counts: dict[str, int] = {}
         self._build()
 
     def _build(self):
@@ -110,8 +117,18 @@ class DQNAgent(Agent):
         self.t = 0
 
     def begin_game(self, game_id):
+        # A fresh agent/run gets fresh novelty counts. Ordinary environment
+        # episode resets do not call begin_game, so counts persist across them.
+        self._novelty_counts.clear()
         if not self.cfg.persist_across_games:
             self._build()
+
+    def _novelty_bonus(self, grid: np.ndarray) -> float:
+        """Count a next-observed grid and return its inverse-sqrt count bonus."""
+        state_key = grid_hash(grid)
+        count = self._novelty_counts.get(state_key, 0) + 1
+        self._novelty_counts[state_key] = count
+        return self.cfg.novelty_beta / sqrt(count)
 
     def epsilon(self):
         c = self.cfg
@@ -129,9 +146,17 @@ class DQNAgent(Agent):
         return int(q.argmax())
 
     def observe(self, obs, action, reward, next_obs, done, info):
-        self.buf.add(to_index(obs), action, reward, to_index(next_obs), float(done), info["action_mask"])
-        self.t += 1
         c = self.cfg
+        # info describes next_obs. The shaped reward is stored only in replay;
+        # the adapter reward and official ARC score are not modified.
+        train_reward = float(reward)
+        if c.novelty:
+            train_reward += self._novelty_bonus(info["grid"])
+        self.buf.add(
+            to_index(obs), action, train_reward, to_index(next_obs),
+            float(done), info["action_mask"]
+        )
+        self.t += 1
         if len(self.buf) >= c.learn_start and self.t % c.train_every == 0:
             self._learn()
         if self.t % c.target_update == 0:

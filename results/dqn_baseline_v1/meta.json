@@ -1,0 +1,45 @@
+{
+  "config": {
+    "agent": "dqn",
+    "games": [
+      "cn04-2fe56bfb",
+      "ka59-38d34dbb",
+      "lp85-305b61c3",
+      "ls20-9607627b",
+      "r11l-495a7899",
+      "re86-8af5384d",
+      "s5i5-18d95033",
+      "sb26-7fbdac44",
+      "sc25-635fd71a",
+      "sk48-d8078629",
+      "sp80-589a99af",
+      "su15-1944f8ab",
+      "tn36-ef4dde99",
+      "tu93-0768757b",
+      "wa30-ee6fef47"
+    ],
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "total_budget": 5000,
+    "adapter": {
+      "frame_stack": 1,
+      "click_cell": 8,
+      "action_budget": 2000,
+      "on_game_over": "reset",
+      "click_mode": "grid",
+      "prune_noops": false
+    },
+    "tag": "dqn_baseline_v1",
+    "out_dir": "results",
+    "record": false
+  },
+  "python": "3.12.13",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "numpy": "2.5.4",
+  "arc_agi": "0.9.9",
+  "torch": "2.14.1+cpu",
+  "cuda": null
+}
