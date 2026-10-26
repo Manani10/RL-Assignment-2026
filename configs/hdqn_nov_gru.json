@@ -1,0 +1,33 @@
+{
+  "agent": "hdqn_nov_gru",
+  "games": [
+    "cn04-2fe56bfb",
+    "ka59-38d34dbb",
+    "lp85-305b61c3",
+    "ls20-9607627b",
+    "r11l-495a7899",
+    "re86-8af5384d",
+    "s5i5-18d95033",
+    "sb26-7fbdac44",
+    "sc25-635fd71a",
+    "sk48-d8078629",
+    "sp80-589a99af",
+    "su15-1944f8ab",
+    "tn36-ef4dde99",
+    "tu93-0768757b",
+    "wa30-ee6fef47"
+  ],
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "total_budget": 5000,
+  "adapter": {
+    "frame_stack": 1,
+    "click_cell": 8,
+    "action_budget": 2000,
+    "on_game_over": "reset"
+  },
+  "tag": "hdqn_nov_gru_v1"
+}

@@ -28,6 +28,10 @@ class Agent:
     def state_dict(self) -> dict:
         return {}
 
+    def diagnostics(self):
+        """Optional JSON-serialisable training statistics, logged by eval/protocol.py."""
+        return None
+
 
 def masked_choice(rng: np.random.Generator, mask: np.ndarray) -> int:
     idx = np.flatnonzero(mask)
