@@ -81,6 +81,7 @@ def run_one(cfg: EvalConfig, game: str, seed: int, ep_log, verbose=False) -> dic
         "wall_s": round(time.time() - t0, 2), "curve": curve,
         "official_score": None if sc is None else sc.get("score"),
         "scorecard": sc,
+        "diagnostics": agent.diagnostics(),
     }
 
 
