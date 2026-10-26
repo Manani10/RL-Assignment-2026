@@ -1,0 +1,32 @@
+| tag | game | seeds | best_levels | official_score | wins | actions_to_first_level | solved_seeds | budget | wall_s |
+|---|---|---|---|---|---|---|---|---|---|
+| random_baseline_heldout_v1 | ar25-0c556536 | 3 | 0 ± 0 | 0 ± 0 | 0 | — | 0 | 5000 | 10 ± 0.83 |
+| random_baseline_heldout_v1 | bp35-0a0ad940 | 3 | 0 ± 0 | 0 ± 0 | 0 | — | 0 | 5000 | 18.6 ± 9.9 |
+| random_baseline_heldout_v1 | cd82-fb555c5d | 3 | 0 ± 0 | 0 ± 0 | 0 | — | 0 | 5000 | 2.5 ± 0.4 |
+| random_baseline_heldout_v1 | dc22-fdcac232 | 3 | 0 ± 0 | 0 ± 0 | 0 | — | 0 | 5000 | 4.12 ± 0.21 |
+| random_baseline_heldout_v1 | ft09-0d8bbf25 | 3 | 1 ± 0 | 0.0153 ± 0.026 | 0 | 3.14e+03 ± 2.4e+03 | 3 | 5000 | 4.78 ± 0.54 |
+| random_baseline_heldout_v1 | g50t-5849a774 | 3 | 0 ± 0 | 0 ± 0 | 0 | — | 0 | 5000 | 5.52 ± 0.042 |
+| random_baseline_heldout_v1 | lf52-271a04aa | 3 | 0 ± 0 | 0 ± 0 | 0 | — | 0 | 5000 | 15.5 ± 1 |
+| random_baseline_heldout_v1 | m0r0-492f87ba | 3 | 0 ± 0 | 0 ± 0 | 0 | — | 0 | 5000 | 2.62 ± 0.057 |
+| random_baseline_heldout_v1 | tr87-cd924810 | 3 | 0.333 ± 0.58 | 0.000243 ± 0.00042 | 0 | 4.37e+03 | 1 | 5000 | 7.73 ± 4.7 |
+| random_baseline_heldout_v1 | vc33-5430563c | 3 | 0 ± 0 | 0 ± 0 | 0 | — | 0 | 5000 | 5.37 ± 3 |
+| random_objonly_heldout_v1 | ar25-0c556536 | 3 | 0 ± 0 | 0 ± 0 | 0 | — | 0 | 5000 | 16.1 ± 1.2 |
+| random_objonly_heldout_v1 | bp35-0a0ad940 | 3 | 0 ± 0 | 0 ± 0 | 0 | — | 0 | 5000 | 51.1 ± 3.5 |
+| random_objonly_heldout_v1 | cd82-fb555c5d | 3 | 1.33 ± 0.58 | 0.00487 ± 0.0045 | 0 | 2.22e+03 ± 1.1e+03 | 3 | 5000 | 18.8 ± 1.3 |
+| random_objonly_heldout_v1 | dc22-fdcac232 | 3 | 0 ± 0 | 0 ± 0 | 0 | — | 0 | 5000 | 36.4 ± 1.8 |
+| random_objonly_heldout_v1 | ft09-0d8bbf25 | 3 | 1.33 ± 0.58 | 0.00323 ± 0.0013 | 0 | 1.74e+03 ± 3.9e+02 | 3 | 5000 | 24.7 ± 1.9 |
+| random_objonly_heldout_v1 | g50t-5849a774 | 3 | 0 ± 0 | 0 ± 0 | 0 | — | 0 | 5000 | 23.5 ± 1.6 |
+| random_objonly_heldout_v1 | lf52-271a04aa | 3 | 0.667 ± 0.58 | 0.000613 ± 0.00096 | 0 | 2.46e+03 ± 2e+03 | 2 | 5000 | 35.4 ± 1.8 |
+| random_objonly_heldout_v1 | m0r0-492f87ba | 3 | 0.333 ± 0.58 | 0.223 ± 0.39 | 0 | 80 | 1 | 5000 | 37.2 ± 12 |
+| random_objonly_heldout_v1 | tr87-cd924810 | 3 | 0.333 ± 0.58 | 0.000243 ± 0.00042 | 0 | 4.37e+03 | 1 | 5000 | 47.4 ± 10 |
+| random_objonly_heldout_v1 | vc33-5430563c | 3 | 2 ± 0 | 0.0432 ± 0.053 | 0 | 128 ± 80 | 3 | 5000 | 28.4 ± 2.9 |
+| dqn_imp2only_heldout_v1 | ar25-0c556536 | 3 | 0 ± 0 | 0 ± 0 | 0 | — | 0 | 5000 | 34.6 ± 1.5 |
+| dqn_imp2only_heldout_v1 | bp35-0a0ad940 | 3 | 0 ± 0 | 0 ± 0 | 0 | — | 0 | 5000 | 78.8 ± 0.25 |
+| dqn_imp2only_heldout_v1 | cd82-fb555c5d | 3 | 1 ± 0 | 0.018 ± 0.023 | 0 | 1.33e+03 ± 6.6e+02 | 3 | 5000 | 37.2 ± 0.3 |
+| dqn_imp2only_heldout_v1 | dc22-fdcac232 | 3 | 0 ± 0 | 0 ± 0 | 0 | — | 0 | 5000 | 58.8 ± 0.64 |
+| dqn_imp2only_heldout_v1 | ft09-0d8bbf25 | 3 | 0.667 ± 1.2 | 0.00328 ± 0.0057 | 0 | 957 | 1 | 5000 | 54.3 ± 9.2 |
+| dqn_imp2only_heldout_v1 | g50t-5849a774 | 3 | 0 ± 0 | 0 ± 0 | 0 | — | 0 | 5000 | 43 ± 0.25 |
+| dqn_imp2only_heldout_v1 | lf52-271a04aa | 3 | 0.667 ± 0.58 | 0.000165 ± 0.00016 | 0 | 2.82e+03 ± 5.3e+02 | 2 | 5000 | 59.1 ± 1.7 |
+| dqn_imp2only_heldout_v1 | m0r0-492f87ba | 3 | 0 ± 0 | 0 ± 0 | 0 | — | 0 | 5000 | 47.5 ± 0.27 |
+| dqn_imp2only_heldout_v1 | tr87-cd924810 | 3 | 0 ± 0 | 0 ± 0 | 0 | — | 0 | 5000 | 62.7 ± 0.19 |
+| dqn_imp2only_heldout_v1 | vc33-5430563c | 3 | 1 ± 0 | 0.00831 ± 0.0053 | 0 | 159 ± 42 | 3 | 5000 | 48.3 ± 0.6 |

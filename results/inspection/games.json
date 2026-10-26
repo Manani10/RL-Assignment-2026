@@ -1,0 +1,1221 @@
+{
+  "meta": {
+    "python": "3.12.2",
+    "arc-agi": "0.9.9",
+    "arcengine": "0.9.3",
+    "numpy": "2.5.4",
+    "n_games": 25
+  },
+  "catalogue": [
+    {
+      "game_id": "wa30-ee6fef47",
+      "title": "WA30",
+      "tags": [
+        "keyboard"
+      ]
+    },
+    {
+      "game_id": "s5i5-18d95033",
+      "title": "S5I5",
+      "tags": [
+        "click"
+      ]
+    },
+    {
+      "game_id": "cn04-2fe56bfb",
+      "title": "CN04",
+      "tags": [
+        "keyboard_click"
+      ]
+    },
+    {
+      "game_id": "sp80-589a99af",
+      "title": "SP80",
+      "tags": [
+        "keyboard_click"
+      ]
+    },
+    {
+      "game_id": "ls20-9607627b",
+      "title": "LS20",
+      "tags": [
+        "keyboard"
+      ]
+    },
+    {
+      "game_id": "sc25-635fd71a",
+      "title": "SC25",
+      "tags": [
+        "keyboard_click"
+      ]
+    },
+    {
+      "game_id": "re86-8af5384d",
+      "title": "RE86",
+      "tags": [
+        "keyboard_click"
+      ]
+    },
+    {
+      "game_id": "ka59-38d34dbb",
+      "title": "KA59",
+      "tags": [
+        "keyboard_click"
+      ]
+    },
+    {
+      "game_id": "bp35-0a0ad940",
+      "title": "BP35",
+      "tags": [
+        "keyboard_click"
+      ]
+    },
+    {
+      "game_id": "cd82-fb555c5d",
+      "title": "CD82",
+      "tags": [
+        "keyboard_click"
+      ]
+    },
+    {
+      "game_id": "m0r0-492f87ba",
+      "title": "M0R0",
+      "tags": [
+        "keyboard_click"
+      ]
+    },
+    {
+      "game_id": "ar25-0c556536",
+      "title": "AR25",
+      "tags": [
+        "keyboard_click"
+      ]
+    },
+    {
+      "game_id": "r11l-495a7899",
+      "title": "R11L",
+      "tags": [
+        "click"
+      ]
+    },
+    {
+      "game_id": "sk48-d8078629",
+      "title": "SK48",
+      "tags": [
+        "keyboard_click"
+      ]
+    },
+    {
+      "game_id": "lf52-271a04aa",
+      "title": "LF52",
+      "tags": [
+        "click"
+      ]
+    },
+    {
+      "game_id": "vc33-5430563c",
+      "title": "VC33",
+      "tags": [
+        "click"
+      ]
+    },
+    {
+      "game_id": "tn36-ef4dde99",
+      "title": "TN36",
+      "tags": [
+        "click"
+      ]
+    },
+    {
+      "game_id": "su15-1944f8ab",
+      "title": "SU15",
+      "tags": [
+        "click"
+      ]
+    },
+    {
+      "game_id": "tr87-cd924810",
+      "title": "TR87",
+      "tags": [
+        "keyboard"
+      ]
+    },
+    {
+      "game_id": "dc22-fdcac232",
+      "title": "DC22",
+      "tags": [
+        "keyboard_click"
+      ]
+    },
+    {
+      "game_id": "lp85-305b61c3",
+      "title": "LP85",
+      "tags": [
+        "click"
+      ]
+    },
+    {
+      "game_id": "g50t-5849a774",
+      "title": "G50T",
+      "tags": [
+        "keyboard"
+      ]
+    },
+    {
+      "game_id": "ft09-0d8bbf25",
+      "title": "FT09",
+      "tags": []
+    },
+    {
+      "game_id": "sb26-7fbdac44",
+      "title": "SB26",
+      "tags": [
+        "keyboard_click"
+      ]
+    },
+    {
+      "game_id": "tu93-0768757b",
+      "title": "TU93",
+      "tags": [
+        "keyboard_click"
+      ]
+    }
+  ],
+  "probe": [
+    {
+      "game_id": "wa30-ee6fef47",
+      "win_levels": 9,
+      "reset_frame_layers": 1,
+      "initial_state": "NOT_FINISHED",
+      "actions_offered": [
+        "ACTION1",
+        "ACTION2",
+        "ACTION3",
+        "ACTION4",
+        "ACTION5"
+      ],
+      "action_effect_rate": {
+        "ACTION1": 0.98,
+        "ACTION2": 1.0,
+        "ACTION3": 1.0,
+        "ACTION4": 0.98,
+        "ACTION5": 0.34
+      },
+      "colours_seen": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        7,
+        9,
+        14
+      ],
+      "frames_per_step": {
+        "1": 500
+      },
+      "distinct_frames_seen": 415,
+      "levels_completed_by_random": 0,
+      "game_overs": 2,
+      "states": {
+        "NOT_FINISHED": 498,
+        "GAME_OVER": 2
+      },
+      "probe_steps": 500,
+      "scorecard_score": 0.0
+    },
+    {
+      "game_id": "s5i5-18d95033",
+      "win_levels": 8,
+      "reset_frame_layers": 1,
+      "initial_state": "NOT_FINISHED",
+      "actions_offered": [
+        "ACTION6"
+      ],
+      "action_effect_rate": {
+        "ACTION6": 1.0
+      },
+      "colours_seen": [
+        2,
+        3,
+        4,
+        5,
+        11,
+        13,
+        14
+      ],
+      "frames_per_step": {
+        "1": 500
+      },
+      "distinct_frames_seen": 195,
+      "levels_completed_by_random": 0,
+      "game_overs": 10,
+      "states": {
+        "NOT_FINISHED": 490,
+        "GAME_OVER": 10
+      },
+      "probe_steps": 500,
+      "scorecard_score": 0.0
+    },
+    {
+      "game_id": "cn04-2fe56bfb",
+      "win_levels": 6,
+      "reset_frame_layers": 1,
+      "initial_state": "NOT_FINISHED",
+      "actions_offered": [
+        "ACTION1",
+        "ACTION2",
+        "ACTION3",
+        "ACTION4",
+        "ACTION5",
+        "ACTION6"
+      ],
+      "action_effect_rate": {
+        "ACTION1": 0.84,
+        "ACTION2": 0.89,
+        "ACTION3": 0.81,
+        "ACTION4": 0.91,
+        "ACTION5": 0.94,
+        "ACTION6": 0.45
+      },
+      "colours_seen": [
+        0,
+        3,
+        4,
+        8,
+        10,
+        12,
+        14
+      ],
+      "frames_per_step": {
+        "1": 500
+      },
+      "distinct_frames_seen": 391,
+      "levels_completed_by_random": 0,
+      "game_overs": 6,
+      "states": {
+        "NOT_FINISHED": 494,
+        "GAME_OVER": 6
+      },
+      "probe_steps": 500,
+      "scorecard_score": 0.0
+    },
+    {
+      "game_id": "sp80-589a99af",
+      "win_levels": 6,
+      "reset_frame_layers": 1,
+      "initial_state": "NOT_FINISHED",
+      "actions_offered": [
+        "ACTION1",
+        "ACTION2",
+        "ACTION3",
+        "ACTION4",
+        "ACTION5",
+        "ACTION6"
+      ],
+      "action_effect_rate": {
+        "ACTION1": 1.0,
+        "ACTION2": 1.0,
+        "ACTION3": 1.0,
+        "ACTION4": 1.0,
+        "ACTION5": 1.0,
+        "ACTION6": 1.0
+      },
+      "colours_seen": [
+        0,
+        1,
+        4,
+        6,
+        8,
+        9,
+        11,
+        12,
+        14
+      ],
+      "frames_per_step": {
+        "1": 433,
+        "22": 57,
+        "28": 6,
+        "20": 1,
+        "26": 2,
+        "27": 1
+      },
+      "distinct_frames_seen": 403,
+      "levels_completed_by_random": 1,
+      "game_overs": 17,
+      "states": {
+        "NOT_FINISHED": 483,
+        "GAME_OVER": 17
+      },
+      "probe_steps": 500,
+      "scorecard_score": 0.04481855116740392
+    },
+    {
+      "game_id": "ls20-9607627b",
+      "win_levels": 7,
+      "reset_frame_layers": 1,
+      "initial_state": "NOT_FINISHED",
+      "actions_offered": [
+        "ACTION1",
+        "ACTION2",
+        "ACTION3",
+        "ACTION4"
+      ],
+      "action_effect_rate": {
+        "ACTION1": 0.97,
+        "ACTION2": 1.0,
+        "ACTION3": 1.0,
+        "ACTION4": 1.0
+      },
+      "colours_seen": [
+        0,
+        1,
+        3,
+        4,
+        5,
+        8,
+        9,
+        11,
+        12
+      ],
+      "frames_per_step": {
+        "1": 485,
+        "6": 15
+      },
+      "distinct_frames_seen": 465,
+      "levels_completed_by_random": 0,
+      "game_overs": 3,
+      "states": {
+        "NOT_FINISHED": 497,
+        "GAME_OVER": 3
+      },
+      "probe_steps": 500,
+      "scorecard_score": 0.0
+    },
+    {
+      "game_id": "sc25-635fd71a",
+      "win_levels": 6,
+      "reset_frame_layers": 1,
+      "initial_state": "NOT_FINISHED",
+      "actions_offered": [
+        "ACTION1",
+        "ACTION2",
+        "ACTION3",
+        "ACTION4",
+        "ACTION6"
+      ],
+      "action_effect_rate": {
+        "ACTION1": 0.85,
+        "ACTION2": 0.91,
+        "ACTION3": 0.95,
+        "ACTION4": 0.95,
+        "ACTION6": 0.06
+      },
+      "colours_seen": [
+        0,
+        2,
+        3,
+        5,
+        9,
+        10,
+        14,
+        15
+      ],
+      "frames_per_step": {
+        "22": 11,
+        "1": 402,
+        "13": 87
+      },
+      "distinct_frames_seen": 300,
+      "levels_completed_by_random": 0,
+      "game_overs": 7,
+      "states": {
+        "NOT_FINISHED": 493,
+        "GAME_OVER": 7
+      },
+      "probe_steps": 500,
+      "scorecard_score": 0.0
+    },
+    {
+      "game_id": "re86-8af5384d",
+      "win_levels": 8,
+      "reset_frame_layers": 1,
+      "initial_state": "NOT_FINISHED",
+      "actions_offered": [
+        "ACTION1",
+        "ACTION2",
+        "ACTION3",
+        "ACTION4",
+        "ACTION5"
+      ],
+      "action_effect_rate": {
+        "ACTION1": 1.0,
+        "ACTION2": 0.99,
+        "ACTION3": 0.99,
+        "ACTION4": 1.0,
+        "ACTION5": 1.0
+      },
+      "colours_seen": [
+        0,
+        1,
+        4,
+        5,
+        9,
+        11,
+        15
+      ],
+      "frames_per_step": {
+        "1": 500
+      },
+      "distinct_frames_seen": 496,
+      "levels_completed_by_random": 0,
+      "game_overs": 5,
+      "states": {
+        "NOT_FINISHED": 495,
+        "GAME_OVER": 5
+      },
+      "probe_steps": 500,
+      "scorecard_score": 0.0
+    },
+    {
+      "game_id": "ka59-38d34dbb",
+      "win_levels": 7,
+      "reset_frame_layers": 1,
+      "initial_state": "NOT_FINISHED",
+      "actions_offered": [
+        "ACTION1",
+        "ACTION2",
+        "ACTION3",
+        "ACTION4",
+        "ACTION6"
+      ],
+      "action_effect_rate": {
+        "ACTION1": 0.91,
+        "ACTION2": 0.99,
+        "ACTION3": 0.94,
+        "ACTION4": 0.94,
+        "ACTION6": 0.59
+      },
+      "colours_seen": [
+        0,
+        1,
+        2,
+        4,
+        5,
+        14,
+        15
+      ],
+      "frames_per_step": {
+        "1": 497,
+        "4": 1,
+        "7": 2
+      },
+      "distinct_frames_seen": 422,
+      "levels_completed_by_random": 0,
+      "game_overs": 5,
+      "states": {
+        "NOT_FINISHED": 495,
+        "GAME_OVER": 5
+      },
+      "probe_steps": 500,
+      "scorecard_score": 0.0
+    },
+    {
+      "game_id": "bp35-0a0ad940",
+      "win_levels": 9,
+      "reset_frame_layers": 2,
+      "initial_state": "NOT_FINISHED",
+      "actions_offered": [
+        "ACTION3",
+        "ACTION4",
+        "ACTION6",
+        "ACTION7"
+      ],
+      "action_effect_rate": {
+        "ACTION3": 1.0,
+        "ACTION4": 1.0,
+        "ACTION6": 1.0,
+        "ACTION7": 1.0
+      },
+      "colours_seen": [
+        0,
+        3,
+        5,
+        9,
+        10,
+        11,
+        14,
+        15
+      ],
+      "frames_per_step": {
+        "2": 240,
+        "5": 220,
+        "4": 19,
+        "3": 19,
+        "25": 2
+      },
+      "distinct_frames_seen": 390,
+      "levels_completed_by_random": 0,
+      "game_overs": 10,
+      "states": {
+        "NOT_FINISHED": 490,
+        "GAME_OVER": 10
+      },
+      "probe_steps": 500,
+      "scorecard_score": 0.0
+    },
+    {
+      "game_id": "cd82-fb555c5d",
+      "win_levels": 6,
+      "reset_frame_layers": 1,
+      "initial_state": "NOT_FINISHED",
+      "actions_offered": [
+        "ACTION1",
+        "ACTION2",
+        "ACTION3",
+        "ACTION4",
+        "ACTION5",
+        "ACTION6"
+      ],
+      "action_effect_rate": {
+        "ACTION1": 0.8,
+        "ACTION2": 0.79,
+        "ACTION3": 0.84,
+        "ACTION4": 0.82,
+        "ACTION5": 0.72,
+        "ACTION6": 0.67
+      },
+      "colours_seen": [
+        0,
+        2,
+        3,
+        4,
+        5,
+        15
+      ],
+      "frames_per_step": {
+        "1": 422,
+        "15": 78
+      },
+      "distinct_frames_seen": 346,
+      "levels_completed_by_random": 0,
+      "game_overs": 5,
+      "states": {
+        "NOT_FINISHED": 495,
+        "GAME_OVER": 5
+      },
+      "probe_steps": 500,
+      "scorecard_score": 0.0
+    },
+    {
+      "game_id": "m0r0-492f87ba",
+      "win_levels": 6,
+      "reset_frame_layers": 1,
+      "initial_state": "NOT_FINISHED",
+      "actions_offered": [
+        "ACTION1",
+        "ACTION2",
+        "ACTION3",
+        "ACTION4",
+        "ACTION5",
+        "ACTION6"
+      ],
+      "action_effect_rate": {
+        "ACTION1": 0.92,
+        "ACTION2": 0.95,
+        "ACTION3": 0.91,
+        "ACTION4": 0.82,
+        "ACTION5": 0.51,
+        "ACTION6": 0.41
+      },
+      "colours_seen": [
+        0,
+        5,
+        10,
+        11,
+        12
+      ],
+      "frames_per_step": {
+        "1": 500
+      },
+      "distinct_frames_seen": 342,
+      "levels_completed_by_random": 0,
+      "game_overs": 3,
+      "states": {
+        "NOT_FINISHED": 497,
+        "GAME_OVER": 3
+      },
+      "probe_steps": 500,
+      "scorecard_score": 0.0
+    },
+    {
+      "game_id": "ar25-0c556536",
+      "win_levels": 8,
+      "reset_frame_layers": 1,
+      "initial_state": "NOT_FINISHED",
+      "actions_offered": [
+        "ACTION1",
+        "ACTION2",
+        "ACTION3",
+        "ACTION4",
+        "ACTION5",
+        "ACTION6",
+        "ACTION7"
+      ],
+      "action_effect_rate": {
+        "ACTION1": 0.97,
+        "ACTION2": 1.0,
+        "ACTION3": 0.97,
+        "ACTION4": 1.0,
+        "ACTION5": 1.0,
+        "ACTION6": 0.0,
+        "ACTION7": 0.94
+      },
+      "colours_seen": [
+        0,
+        4,
+        5,
+        9,
+        10,
+        11
+      ],
+      "frames_per_step": {
+        "1": 500
+      },
+      "distinct_frames_seen": 390,
+      "levels_completed_by_random": 0,
+      "game_overs": 5,
+      "states": {
+        "NOT_FINISHED": 495,
+        "GAME_OVER": 5
+      },
+      "probe_steps": 500,
+      "scorecard_score": 0.0
+    },
+    {
+      "game_id": "r11l-495a7899",
+      "win_levels": 6,
+      "reset_frame_layers": 1,
+      "initial_state": "NOT_FINISHED",
+      "actions_offered": [
+        "ACTION6"
+      ],
+      "action_effect_rate": {
+        "ACTION6": 1.0
+      },
+      "colours_seen": [
+        0,
+        1,
+        2,
+        3,
+        5,
+        6,
+        10,
+        12,
+        15
+      ],
+      "frames_per_step": {
+        "1": 132,
+        "3": 234,
+        "23": 108,
+        "2": 26
+      },
+      "distinct_frames_seen": 473,
+      "levels_completed_by_random": 1,
+      "game_overs": 26,
+      "states": {
+        "NOT_FINISHED": 474,
+        "GAME_OVER": 26
+      },
+      "probe_steps": 500,
+      "scorecard_score": 4.761904761904762
+    },
+    {
+      "game_id": "sk48-d8078629",
+      "win_levels": 8,
+      "reset_frame_layers": 1,
+      "initial_state": "NOT_FINISHED",
+      "actions_offered": [
+        "ACTION1",
+        "ACTION2",
+        "ACTION3",
+        "ACTION4",
+        "ACTION6",
+        "ACTION7"
+      ],
+      "action_effect_rate": {
+        "ACTION1": 0.82,
+        "ACTION2": 0.99,
+        "ACTION3": 0.82,
+        "ACTION4": 0.89,
+        "ACTION6": 0.0,
+        "ACTION7": 1.0
+      },
+      "colours_seen": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        9,
+        14
+      ],
+      "frames_per_step": {
+        "2": 269,
+        "1": 227,
+        "3": 4
+      },
+      "distinct_frames_seen": 289,
+      "levels_completed_by_random": 0,
+      "game_overs": 1,
+      "states": {
+        "NOT_FINISHED": 499,
+        "GAME_OVER": 1
+      },
+      "probe_steps": 500,
+      "scorecard_score": 0.0
+    },
+    {
+      "game_id": "lf52-271a04aa",
+      "win_levels": 10,
+      "reset_frame_layers": 2,
+      "initial_state": "NOT_FINISHED",
+      "actions_offered": [
+        "ACTION1",
+        "ACTION2",
+        "ACTION3",
+        "ACTION4",
+        "ACTION6",
+        "ACTION7"
+      ],
+      "action_effect_rate": {
+        "ACTION1": 1.0,
+        "ACTION2": 1.0,
+        "ACTION3": 1.0,
+        "ACTION4": 1.0,
+        "ACTION6": 1.0,
+        "ACTION7": 1.0
+      },
+      "colours_seen": [
+        0,
+        1,
+        2,
+        3,
+        5,
+        9,
+        10,
+        14
+      ],
+      "frames_per_step": {
+        "2": 417,
+        "16": 79,
+        "3": 4
+      },
+      "distinct_frames_seen": 141,
+      "levels_completed_by_random": 0,
+      "game_overs": 5,
+      "states": {
+        "NOT_FINISHED": 495,
+        "GAME_OVER": 5
+      },
+      "probe_steps": 500,
+      "scorecard_score": 0.0
+    },
+    {
+      "game_id": "vc33-5430563c",
+      "win_levels": 7,
+      "reset_frame_layers": 1,
+      "initial_state": "NOT_FINISHED",
+      "actions_offered": [
+        "ACTION6"
+      ],
+      "action_effect_rate": {
+        "ACTION6": 1.0
+      },
+      "colours_seen": [
+        0,
+        3,
+        4,
+        5,
+        7,
+        9,
+        11
+      ],
+      "frames_per_step": {
+        "1": 500
+      },
+      "distinct_frames_seen": 98,
+      "levels_completed_by_random": 0,
+      "game_overs": 10,
+      "states": {
+        "NOT_FINISHED": 490,
+        "GAME_OVER": 10
+      },
+      "probe_steps": 500,
+      "scorecard_score": 0.0
+    },
+    {
+      "game_id": "tn36-ef4dde99",
+      "win_levels": 7,
+      "reset_frame_layers": 1,
+      "initial_state": "NOT_FINISHED",
+      "actions_offered": [
+        "ACTION6"
+      ],
+      "action_effect_rate": {
+        "ACTION6": 1.0
+      },
+      "colours_seen": [
+        0,
+        1,
+        3,
+        4,
+        5,
+        9,
+        11
+      ],
+      "frames_per_step": {
+        "1": 487,
+        "2": 8,
+        "7": 5
+      },
+      "distinct_frames_seen": 326,
+      "levels_completed_by_random": 0,
+      "game_overs": 8,
+      "states": {
+        "NOT_FINISHED": 492,
+        "GAME_OVER": 8
+      },
+      "probe_steps": 500,
+      "scorecard_score": 0.0
+    },
+    {
+      "game_id": "su15-1944f8ab",
+      "win_levels": 9,
+      "reset_frame_layers": 1,
+      "initial_state": "NOT_FINISHED",
+      "actions_offered": [
+        "ACTION6",
+        "ACTION7"
+      ],
+      "action_effect_rate": {
+        "ACTION6": 0.81,
+        "ACTION7": 0.03
+      },
+      "colours_seen": [
+        0,
+        3,
+        4,
+        5,
+        9,
+        15
+      ],
+      "frames_per_step": {
+        "1": 296,
+        "5": 204
+      },
+      "distinct_frames_seen": 82,
+      "levels_completed_by_random": 0,
+      "game_overs": 6,
+      "states": {
+        "NOT_FINISHED": 494,
+        "GAME_OVER": 6
+      },
+      "probe_steps": 500,
+      "scorecard_score": 0.0
+    },
+    {
+      "game_id": "tr87-cd924810",
+      "win_levels": 6,
+      "reset_frame_layers": 1,
+      "initial_state": "NOT_FINISHED",
+      "actions_offered": [
+        "ACTION1",
+        "ACTION2",
+        "ACTION3",
+        "ACTION4"
+      ],
+      "action_effect_rate": {
+        "ACTION1": 1.0,
+        "ACTION2": 1.0,
+        "ACTION3": 1.0,
+        "ACTION4": 1.0
+      },
+      "colours_seen": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        10
+      ],
+      "frames_per_step": {
+        "1": 500
+      },
+      "distinct_frames_seen": 497,
+      "levels_completed_by_random": 0,
+      "game_overs": 3,
+      "states": {
+        "NOT_FINISHED": 497,
+        "GAME_OVER": 3
+      },
+      "probe_steps": 500,
+      "scorecard_score": 0.0
+    },
+    {
+      "game_id": "dc22-fdcac232",
+      "win_levels": 6,
+      "reset_frame_layers": 1,
+      "initial_state": "NOT_FINISHED",
+      "actions_offered": [
+        "ACTION1",
+        "ACTION2",
+        "ACTION3",
+        "ACTION4",
+        "ACTION6"
+      ],
+      "action_effect_rate": {
+        "ACTION1": 0.81,
+        "ACTION2": 0.88,
+        "ACTION3": 0.83,
+        "ACTION4": 0.84,
+        "ACTION6": 0.5
+      },
+      "colours_seen": [
+        0,
+        2,
+        3,
+        4,
+        5,
+        8,
+        9,
+        11,
+        13,
+        14
+      ],
+      "frames_per_step": {
+        "1": 500
+      },
+      "distinct_frames_seen": 324,
+      "levels_completed_by_random": 0,
+      "game_overs": 3,
+      "states": {
+        "NOT_FINISHED": 497,
+        "GAME_OVER": 3
+      },
+      "probe_steps": 500,
+      "scorecard_score": 0.0
+    },
+    {
+      "game_id": "lp85-305b61c3",
+      "win_levels": 8,
+      "reset_frame_layers": 1,
+      "initial_state": "NOT_FINISHED",
+      "actions_offered": [
+        "ACTION6"
+      ],
+      "action_effect_rate": {
+        "ACTION6": 0.01
+      },
+      "colours_seen": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        8,
+        9,
+        10,
+        11,
+        14,
+        15
+      ],
+      "frames_per_step": {
+        "1": 500
+      },
+      "distinct_frames_seen": 7,
+      "levels_completed_by_random": 0,
+      "game_overs": 0,
+      "states": {
+        "NOT_FINISHED": 500
+      },
+      "probe_steps": 500,
+      "scorecard_score": 0.0
+    },
+    {
+      "game_id": "g50t-5849a774",
+      "win_levels": 7,
+      "reset_frame_layers": 1,
+      "initial_state": "NOT_FINISHED",
+      "actions_offered": [
+        "ACTION1",
+        "ACTION2",
+        "ACTION3",
+        "ACTION4",
+        "ACTION5"
+      ],
+      "action_effect_rate": {
+        "ACTION1": 0.61,
+        "ACTION2": 0.92,
+        "ACTION3": 0.65,
+        "ACTION4": 0.94,
+        "ACTION5": 0.82
+      },
+      "colours_seen": [
+        0,
+        1,
+        2,
+        5,
+        8,
+        9
+      ],
+      "frames_per_step": {
+        "7": 156,
+        "1": 207,
+        "17": 17,
+        "9": 82,
+        "25": 7,
+        "13": 17,
+        "21": 6,
+        "2": 1,
+        "29": 1,
+        "8": 2,
+        "33": 2,
+        "41": 1,
+        "45": 1
+      },
+      "distinct_frames_seen": 307,
+      "levels_completed_by_random": 0,
+      "game_overs": 3,
+      "states": {
+        "NOT_FINISHED": 497,
+        "GAME_OVER": 3
+      },
+      "probe_steps": 500,
+      "scorecard_score": 0.0
+    },
+    {
+      "game_id": "ft09-0d8bbf25",
+      "win_levels": 6,
+      "reset_frame_layers": 1,
+      "initial_state": "NOT_FINISHED",
+      "actions_offered": [
+        "ACTION6"
+      ],
+      "action_effect_rate": {
+        "ACTION6": 0.07
+      },
+      "colours_seen": [
+        0,
+        2,
+        4,
+        5,
+        8,
+        9,
+        11,
+        12
+      ],
+      "frames_per_step": {
+        "5": 462,
+        "1": 38
+      },
+      "distinct_frames_seen": 34,
+      "levels_completed_by_random": 0,
+      "game_overs": 1,
+      "states": {
+        "NOT_FINISHED": 499,
+        "GAME_OVER": 1
+      },
+      "probe_steps": 500,
+      "scorecard_score": 0.0
+    },
+    {
+      "game_id": "sb26-7fbdac44",
+      "win_levels": 8,
+      "reset_frame_layers": 1,
+      "initial_state": "NOT_FINISHED",
+      "actions_offered": [
+        "ACTION5",
+        "ACTION6",
+        "ACTION7"
+      ],
+      "action_effect_rate": {
+        "ACTION5": 1.0,
+        "ACTION6": 0.05,
+        "ACTION7": 0.01
+      },
+      "colours_seen": [
+        0,
+        2,
+        3,
+        4,
+        5,
+        8,
+        9,
+        11,
+        14,
+        15
+      ],
+      "frames_per_step": {
+        "1": 307,
+        "42": 191,
+        "7": 1,
+        "66": 1
+      },
+      "distinct_frames_seen": 73,
+      "levels_completed_by_random": 0,
+      "game_overs": 3,
+      "states": {
+        "NOT_FINISHED": 497,
+        "GAME_OVER": 3
+      },
+      "probe_steps": 500,
+      "scorecard_score": 0.0
+    },
+    {
+      "game_id": "tu93-0768757b",
+      "win_levels": 9,
+      "reset_frame_layers": 1,
+      "initial_state": "NOT_FINISHED",
+      "actions_offered": [
+        "ACTION1",
+        "ACTION2",
+        "ACTION3",
+        "ACTION4"
+      ],
+      "action_effect_rate": {
+        "ACTION1": 1.0,
+        "ACTION2": 1.0,
+        "ACTION3": 1.0,
+        "ACTION4": 1.0
+      },
+      "colours_seen": [
+        0,
+        2,
+        4,
+        5,
+        6,
+        9,
+        14
+      ],
+      "frames_per_step": {
+        "8": 166,
+        "1": 334
+      },
+      "distinct_frames_seen": 226,
+      "levels_completed_by_random": 0,
+      "game_overs": 10,
+      "states": {
+        "NOT_FINISHED": 490,
+        "GAME_OVER": 10
+      },
+      "probe_steps": 500,
+      "scorecard_score": 0.0
+    }
+  ]
+}
