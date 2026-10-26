@@ -1,20 +1,18 @@
-"""Bridge: plug our agents into the official Kaggle starter — OWNER: Member 1.
+"""Bridge between the official ARC-AGI-3 agent framework and our agents (Member 1).
 
-Do NOT copy this file directly: the starter only packages agent/my_agent.py,
-so `arcrl` would be missing on Kaggle. Build a single self-contained file:
+The framework calls `choose_action(frames, latest_frame)` once per step and
+`is_done(...)` to decide when to stop. We translate each call into our agent
+API (`act` / `observe`, see src/arcrl/agents/base.py), so the SAME agent code
+runs in our local experiments (scripts/evaluate.py) and on Kaggle.
 
-    python scripts/bundle_agent.py --agent dqn --out build/my_agent.py
-    cp build/my_agent.py ../ARC-AGI-3-Kaggle-Starter/agent/my_agent.py
-    cd ../ARC-AGI-3-Kaggle-Starter && make play-local && make submit
-    then "Submit to Competition" on kaggle.com
+Per step: encode the latest frame, update the action space (grid or object
+click targets, src/arcrl/env/actions.py), give the agent the reward for the
+previous action (+1 per newly completed level), and return its next action.
+Learning is online only: the agent starts from scratch in every game, and the
+internet is disabled during Kaggle evaluation.
 
-The starter calls `choose_action(frames, latest_frame)` once per step and
-`is_done(...)` to stop. We translate that into our Agent.act/observe API so the
-SAME agent code runs in local experiments and on Kaggle (online learning only,
-internet is disabled during Kaggle evaluation).
-
-TODO(Member 1): confirm the two framework imports below against the sample agent
-(`make pull-sample`) — names can change between toolkit versions.
+Settings come from environment variables; scripts/build_kaggle_notebook.py
+bakes the submitted agent's values in as the defaults.
 """
 from __future__ import annotations
 
@@ -52,6 +50,9 @@ def _names(actions) -> set[str]:
 
 
 class MyAgent(Agent):
+    # The framework's main loop stops at self.MAX_ACTIONS (default 80) — use ours instead.
+    MAX_ACTIONS = MAX_ACTIONS
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # same action space as local experiments (env/actions.py)
