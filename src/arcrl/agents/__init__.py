@@ -16,4 +16,7 @@ def build_agent(name: str, n_actions: int, in_ch: int, seed: int):
     if name == "ppo":
         from .ppo import PPOAgent
         return PPOAgent(n_actions, in_ch, seed)
+    if name.startswith("hdqn"):   # hierarchical DQN family (see agents/hdqn.py VARIANTS)
+        from .hdqn import HDQNAgent, hdqn_config
+        return HDQNAgent(n_actions, in_ch, seed, cfg=hdqn_config(name))
     raise KeyError(f"Unknown agent {name!r}")

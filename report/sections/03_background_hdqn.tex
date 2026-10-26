@@ -1,0 +1,33 @@
+% OWNER: Member 3. Include inside the Background section (after the DQN subsection).
+\subsection{Hierarchical DQN}\label{sec:bg-hdqn}
+Hierarchical DQN (h-DQN) \citep{kulkarni2016hdqn} extends DQN with temporal
+abstraction in the sense of options and semi-MDPs \citep{sutton1999options}: a
+\emph{meta-controller} chooses a subgoal $g$ from a finite set $\mathcal{G}$ and a
+\emph{controller} then selects primitive actions until the subgoal is reached or a
+horizon $H$ elapses. Both levels are DQN learners with their own network, replay
+memory and target network. The motivation is exploration under sparse reward: the
+controller is trained on a dense \emph{intrinsic} reward for reaching subgoals,
+so it acquires reusable skills even when the environment reward is almost never
+seen, while the meta-controller reasons over far fewer, longer decisions.
+
+\paragraph{Objectives.} Let $f_t$ be the environment reward, $r^{\text{int}}_t$ the
+intrinsic reward (1 when subgoal $g$ is reached, else 0), and a segment last
+$N\le H$ steps from state $s_t$. The controller $Q_1(s,g,a)$ minimises the DQN
+loss on the transitions of the current subgoal,
+$\big(r^{\text{int}}_t+\gamma(1-\mathbb 1_{g\text{ reached}})\,Q_1^{-}(s_{t+1},g,a^\star)-Q_1(s_t,g,a_t)\big)^2$,
+with $a^\star$ chosen by the online network (Double DQN, as in our flat DQN), and the
+meta-controller $Q_2(s,g)$ minimises the same loss at the segment level with reward
+$\sum_{i<N}f_{t+i}$ and discount $\gamma_{\text{m}}$ per segment:
+$\big(\sum_{i<N}f_{t+i}+\gamma_{\text{m}}\,Q_2^{-}(s_{t+N},g^\star)-Q_2(s_t,g_t)\big)^2$.
+Both use $\epsilon$-greedy exploration and Huber loss.
+
+\paragraph{What is learned, when, and how it affects decisions.} $Q_1$ learns which
+primitive action advances a given subgoal, from every environment step once 500
+transitions exist (one gradient step per 4 steps). $Q_2$ learns which subgoals tend
+to lead to level completion, from stored segments (one gradient step per 2
+segments after the first 32). At decision time $Q_2$ picks $g$ every $\le H$ steps
+and $Q_1$ conditions on it through an extra input plane marking the subgoal
+cell; the policy over primitive actions therefore changes whenever either network
+is updated. In a 5000-action run this gives roughly 1100 controller and at least 230
+meta-controller gradient steps, which is the regime studied in
+Section~\ref{sec:hdqn}.

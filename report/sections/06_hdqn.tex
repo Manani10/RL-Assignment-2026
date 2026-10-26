@@ -1,0 +1,121 @@
+% OWNER: Member 3. DRAFT: every \todo{} must be filled from results/<tag>/ (scripts/analyze.py).
+\section{h-DQN: baseline and improvements}\label{sec:hdqn}
+
+\paragraph{Protocol.} Same as the other agents (Section~\ref{sec:setup}): the 15
+development games, seeds $\{0,1,2\}$, 5000 actions per run, the 8$\times$8 click
+grid, and unmodified official scoring (\todo{arc-agi version, local scorecard}).
+Everything is re-initialised at the start of each game; weights, replay memories,
+the GRU state and novelty counts persist across levels and resets \emph{within} a
+game. Environment reward is $+1$ per level completed; the intrinsic subgoal reward
+and the novelty bonus never enter a reported score. The h-DQN code is our own
+implementation of \citet{kulkarni2016hdqn} (\texttt{agents/hdqn.py}); no external
+h-DQN code or pretrained model is used.
+
+\subsection{Baseline}\label{sec:hdqn-base}
+\textbf{Design.} Subgoals are the cells of a 4$\times$4 partition of the 64$\times$64
+frame ($|\mathcal G|=16$, 16-pixel cells). Subgoal $g$ is \emph{reached} when at
+least one pixel inside cell $g$ changes; it uses only the public frame. In a game
+where actions move an avatar this means ``go to cell $g$''; where clicks toggle
+objects it means ``act on what is in cell $g$''. The horizon is $H=10$ actions,
+$\gamma=0.99$, $\gamma_{\text{m}}=0.95$. Controller and meta-controller use the
+shared CNN encoder (the controller gets one extra subgoal plane), and
+$\epsilon$ decays from 1 to 0.05 over 3000 actions (controller) and from 1 to 0.1
+over 300 segments (meta-controller). Hyperparameters not listed are in
+Table~\ref{tab:hparams}.
+
+\textbf{Sanity checks and reference.} The random policy and the flat DQN of
+Section~\ref{sec:dqn} (same games, seeds, budgets).
+
+\textbf{Expected limitation.} The meta-controller receives non-zero reward on
+very few segments (random play completes 9 levels in 45 runs), so $Q_2$ has almost
+nothing to learn from, whereas the controller does get a dense signal \emph{if}
+subgoals are reachable. \emph{Hypothesis H0:} the learned meta-controller adds
+nothing over choosing subgoals uniformly at random. We test H0 with the
+\texttt{random\_meta} ablation, in which the meta-controller is replaced by
+uniform sampling and the controller is identical.
+
+\textbf{Result.} \todo{Table~\ref{tab:hdqn-ablation} rows ``h-DQN random meta''
+and ``h-DQN''; fraction of subgoals reached (\texttt{goal\_success} in
+\texttt{runs.jsonl} diagnostics) over the run; whether H0 holds. If
+\texttt{goal\_success} stays near 0 the controller has no usable signal and the
+subgoal definition is the bottleneck, which we state as the finding.}
+
+\subsection{Improvement 1: novelty bonus on the meta-controller}\label{sec:hdqn-nov}
+\textbf{Limitation $\to$ hypothesis.} \todo{From H0 result:} the meta reward is
+almost always 0, so $Q_2$ stays flat and subgoal choice stays near uniform
+(measured by the entropy of chosen subgoals, \texttt{goal\_entropy}). We
+hypothesise that rewarding subgoals whose segments end in a frame not seen before
+in this game gives $Q_2$ a dense, task-agnostic signal that favours subgoals that
+change the world, and thereby reaches new states and levels sooner.
+
+\textbf{Intervention.} At the end of each segment the meta reward becomes
+$\sum f + \beta/\sqrt{N(h(s_{\text{end}}))}$, where $h$ is a hash of the final frame,
+$N$ counts how often it was seen in this game, and $\beta=0.5$
+\citep{bellemare2016count}. The controller's intrinsic reward is unchanged. This
+differs from flat-DQN novelty because the bonus attaches to \emph{subgoal choices}
+rather than to every primitive step; its effect is evaluated separately here.
+
+\textbf{Result and analysis.} \todo{Table~\ref{tab:hdqn-ablation}; change in goal
+entropy, number of distinct frames visited, levels gained or lost per game;
+possible failure mode: frames that change every step (timers, animations) make
+every segment look novel.}
+
+\subsection{Improvement 2: recurrent (GRU) meta-controller}\label{sec:hdqn-gru}
+\textbf{Limitation $\to$ hypothesis.} The meta-controller sees one frame, but the
+rules are hidden and the right next subgoal depends on what has already been
+tried in this game. \todo{Cite a failure replay in which the agent repeats a
+fruitless subgoal.} We hypothesise that a memory over past (subgoal, outcome)
+pairs lets $Q_2$ stop repeating subgoals that did nothing.
+
+\textbf{Intervention.} $Q_2$ becomes a GRU \citep{cho2014gru} over the sequence of
+meta decisions: at each decision its input is the encoded frame, the one-hot
+previous subgoal and the previous segment's outcome (reached flag, length$/H$),
+hidden size 128. The hidden state persists across levels and resets within a game
+and is reset between games. Training follows the recurrent-DQN recipe
+\citep{hausknecht2015drqn}: windows of 9 consecutive stored segments, unrolled from a
+zero state, with the first 2 steps as burn-in (no loss), as in
+\citet{kapturowski2019r2d2}; no recurrent state is stored. The non-recurrent
+variant is trained on the same windows with loss on all positions, so the
+\emph{only} difference is the GRU. Compute is higher (a sequence of
+frames per update).
+
+\textbf{Result and analysis.} \todo{Table~\ref{tab:hdqn-ablation}; learning
+curves; whether memory helps, only in some games, or not at all given $\approx$230
+meta updates per run.}
+
+\subsection{Ablation and attribution}
+\begin{table}[t]
+\centering\footnotesize\setlength{\tabcolsep}{3pt}
+\caption{h-DQN versions on the 15 development games, 3 seeds, 5000 actions/run.
+Official local score in \% (mean $\pm$ sd over seeds), total levels over 45 runs,
+and mean wall-clock per run. \todo{fill from \texttt{scripts/analyze.py}.}}
+\label{tab:hdqn-ablation}
+\begin{tabular}{lcccccc}
+\toprule
+Version & Meta & Novelty & GRU & Score (\%) & Levels & Wall (s) \\
+\midrule
+Random             & --         & --         & --         & 0.0104 $\pm$ 0.011 & 9 & \todo{} \\
+Flat DQN (Sec.~\ref{sec:dqn}) & -- & -- & -- & \todo{} & \todo{} & \todo{} \\
+h-DQN, random meta & random     & $\times$   & $\times$   & \todo{} & \todo{} & \todo{} \\
+h-DQN (baseline)   & learned    & $\times$   & $\times$   & \todo{} & \todo{} & \todo{} \\
++ Imp.\ 1 (novelty)& learned    & $\surd$    & $\times$   & \todo{} & \todo{} & \todo{} \\
++ Imp.\ 2 (GRU)    & learned    & $\times$   & $\surd$    & \todo{} & \todo{} & \todo{} \\
++ Imp.\ 1 + 2      & learned    & $\surd$    & $\surd$    & \todo{} & \todo{} & \todo{} \\
+\bottomrule
+\end{tabular}
+\end{table}
+The design isolates the hierarchy (random meta vs.\ learned meta), each
+improvement alone, and their interaction under identical games, seeds and
+budgets. \todo{Learning curves (best levels vs.\ actions, one line per seed);
+paired per-game differences; what the hierarchy buys over flat DQN; which effects
+are distinguishable from seed noise with three seeds; held-out results run by
+Member~1.}
+
+\subsection{Failure cases and limitations}
+\todo{Replays of one success and one failure (\texttt{record: true}); games
+where no version progressed; honest statement that at 5000 actions the agent has
+had roughly 1100 controller and 230 meta updates, so conclusions concern the
+early-learning regime. Known simplifications: one decaying $\epsilon$ per level
+instead of per-subgoal annealing; time-outs are not terminal for the controller;
+GAME\_OVER resets are ordinary transitions; GRU windows start from a zero state;
+subgoals are a fixed partition of the screen, not objects.}
