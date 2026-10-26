@@ -105,3 +105,21 @@ One entry per experiment — failures included. This becomes the "iterative resu
 - **Outcome:** All 45 runs completed. Mean official score was 0.33005, with sample standard deviation 0.28863 across the three seed-level means. Non-zero official scores occurred in 14/45 runs, with progress in 6/15 games. The sum of per-run best levels was 14. Mean runtime was approximately 78.0 seconds per run, ranging from 61.85 to 98.99 seconds.
 - **What it shows / what is still uncertain:** Compared with object clicks alone (`dqn_imp2only_v1`), the combined agent had the same number of runs with progress (14/45) and games with progress (6/15), but a lower mean official score (0.33005 versus 0.3624) and fewer total per-run best levels (14 versus 17). The novelty bonus therefore showed no clear additional benefit in this experiment. Results were highly variable across seeds, and two games (`r11l` and `sp80`) accounted for approximately 99.25% of the total official score. These results do not establish that novelty is generally harmful; they indicate that its additional value alongside object clicks was not demonstrated under this evaluation setup.
 - **Next step:** Complete the DQN comparison across baseline, novelty only, object clicks only, and the combined configuration. Then check the remaining requirements for held-out evaluation and the DQN-versus-PPO comparison.
+
+
+### H0 h-DQN baseline, hierarchy ablation and two improvements — Member 3 — 2026-10-22
+- Code: `src/arcrl/agents/hdqn.py` (own implementation of Kulkarni et al. 2016), commit `fc31373`. Configs `configs/hdqn_*.json` are identical to `configs/dqn_baseline.json` except `agent` and `tag`: 15 dev games, seeds 0–2, 5000 actions/run, 2000/episode, 8x8 grid clicks. Run in a Kaggle notebook (`hdqn_runner.ipynb`), arc-agi 0.9.9, torch 2.11.0+cu130.
+- Design: 16 subgoals (4x4 cells of the frame), subgoal reached = at least one pixel changed in that cell, horizon 10, controller intrinsic reward +1 on reaching; meta-controller gets the level reward only.
+- Results (official score %, mean over seeds of per-game mean ± sd over seeds; total best levels over 45 runs; wall-clock s/run):
+
+| Version (tag) | Score % | Levels | Wall s |
+|---|---|---|---|
+| random meta (`hdqn_randmeta_v1`) | 0.0025 ± 0.0035 | 7 | 14.1 |
+| h-DQN baseline (`hdqn_baseline_v1`) | 0.0049 ± 0.0052 | 6 | 19.4 |
+| + Imp 1 novelty (`hdqn_nov_v1`) | 0.0051 ± 0.0050 | 7 | 21.2 |
+| + Imp 2 GRU (`hdqn_gru_v1`) | 0.0055 ± 0.0049 | 7 | 19.8 |
+| + Imp 1 + 2 (`hdqn_nov_gru_v1`) | 0.0059 ± 0.0046 | 8 | 20.8 |
+
+- What it shows: no version is distinguishable from another or from random subgoals at 5000 actions (H0, "the learned meta-controller adds nothing", not rejected; novelty and GRU hypotheses not supported). Six levels come from lp85 and r11l, solved by every version on every seed. Extra levels: sp80 (random meta 1, novelty 1, novelty+GRU 2) and ls20 (GRU 1). 11/15 games: no level in any version. Controller subgoal-success share does not rise within a run (baseline 0.276 → 0.272; random meta 0.263 → 0.274).
+- Caveats: versions with the same seed share an identical random exploration prefix (lp85 seeds 1, 2 reach level 1 at 415 and 122 actions in all four learned versions), random meta is not seed-matched with the others; r11l level 1 is faster for all learned seeds (143–479 actions) than for random meta (664–1008) but this rests on 3 seeds in one game.
+- Next step: object-click variants of the same five configs (Improvement 2 of the shared action space; random agent gained 0.0104 → 0.430 from it), flat-DQN comparison from raw runs, held-out games (Member 1).
