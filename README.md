@@ -7,7 +7,7 @@ Group project for **Reinforcement Learning (COMS4061A/COMS7071A), Wits 2026**, a
 
 ## Team
 | Role | Name |
-|---|---|---|
+|---|---|
 | Member 1 | Sinethemba Nani |
 | Member 2 | Cassia Rene Rieckhoff |
 | Member 3 | Margaret Keitshokile Molefe |
